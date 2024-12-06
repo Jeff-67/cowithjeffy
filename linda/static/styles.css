@@ -3,7 +3,6 @@ body {
     background-image: url('./images/jko_pig_background.jpg'); /* Retaining the original banner */
     background-repeat: no-repeat;
     background-position: top center;
-    background-size: 100% auto;
     background-color: white;
     color: #E3001C;
     margin: 0;
