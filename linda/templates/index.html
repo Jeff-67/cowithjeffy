@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee Lottery</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="content-container" style="margin-top: 100px; display: flex; flex-direction: column; align-items: center;">
+        <!-- Add Employee Section -->
+        <div style="width: 100%; display: flex; justify-content: center; margin-bottom: 20px;">
+            <form id="bulkAddForm" style="width: 80%; max-width: 600px;">
+                <textarea id="employeeNames" name="employee_names" placeholder="Enter employee names, one per line" required></textarea>
+                <button type="submit" style="background-color: white; border: 2px solid red; color: black; padding: 8px 15px; border-radius: 5px;">
+                    <img src="./static/images/jko_icon.png" alt="Add" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 5px;">
+                    加入街口
+                </button>
+            </form>
+        </div>
+
+        <!-- Candidate Pool -->
+        <div style="width: 100%; text-align: center; margin-bottom: 20px;">
+            <h2>Candidate Pool</h2>
+            <div id="employeeList" class="name-card-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 5px;">
+                {% for employee in employees %}
+                    <div class="name-card" style="width: 60px; height: 60px; padding: 3px; text-align: center; border-radius: 50%; background-color: #f0f0f0; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                        <img src="./static/images/pig_icon1.png" alt="Employee Icon" style="width: 20px; height: 20px;">
+                        <h3 style="font-size: 12px; margin: 2px 0;">{{ employee }}</h3>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Two-column layout for selection and results -->
+        <div style="display: flex; justify-content: space-between; width: 90%; max-width: 1200px; margin-top: 20px;">
+            <!-- Left Section (Selection Buttons) -->
+            <div class="left-section" style="flex: 0 0 300px; margin-right: 20px;">
+                <div class="prize-sections">
+                    <div class="prize-section" id="section1000" style="margin-bottom: 20px;">
+                        <h3 style="color: black">尾牙日加碼！回饋最高<span style="color: red; font-weight: bold">$1000</span></h3>
+                        <input type="number" id="winners1000" name="winners1000" placeholder="得獎者人數" min="1" required>
+                        <button onclick="selectWinner('1000', document.getElementById('winners1000').value)">抽出1000元得獎者</button>
+                    </div>
+                
+                    <div class="prize-section" id="section5000" style="margin-bottom: 20px;">
+                        <h3 style="color: black">街口再加碼！回饋最高<span style="color: red; font-weight: bold">$5000</span></h3>
+                        <input type="number" id="winners5000" name="winners5000" placeholder="得獎者人數" min="1" required>
+                        <button onclick="selectWinner('5000', document.getElementById('winners5000').value)">抽出5000元得獎者</button>
+                    </div>
+                
+                    <div class="prize-section" id="section10000">
+                        <h3 style="color: black">尾牙日加碼！回饋最高<span style="color: red; font-weight: bold">$10000</span>無上限</h3>
+                        <input type="number" id="winners10000" name="winners10000" placeholder="得獎者人數" min="1" required>
+                        <button onclick="selectWinner('10000', document.getElementById('winners10000').value)">抽出10000元得獎者</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Section (Results) -->
+            <div class="right-section" style="flex: 1; margin-left: 20px;">
+                <div id="winner" class="winner-display">
+                    <!-- Winners will be displayed here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('bulkAddForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const namesText = document.getElementById('employeeNames').value;
+            const names = namesText.split('\n').filter(name => name.trim() !== '');
+
+            fetch('/add_employees', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ names: names })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Refresh the page to show updated employee list
+                    location.reload();
+                } else {
+                    alert('Error adding employees: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error adding employees');
+            });
+        });
+
+        function selectWinner(prizeAmount, numWinners) {
+            if (!numWinners || numWinners < 1) {
+                alert('Please enter a valid number of winners');
+                return;
+            }
+
+            // Updated winner display with animation
+            const winnerDiv = document.getElementById('winner');
+            winnerDiv.innerHTML = `
+                <h2>抽獎結果</h2>
+                <div class="shuffling-animation">
+                    ${Array(parseInt(numWinners)).fill().map(() => `
+                        <div class="shuffling-card">
+                            <img src="./static/images/pig_icon1.png" alt="Shuffling" class="pig-mascot">
+                            <p>抽獎中...</p>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            setTimeout(() => {
+                fetch(`/select_winner?num_winners=${numWinners}&prize_type=${prizeAmount}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            alert(data.error);
+                            return;
+                        }
+                        
+                        winnerDiv.innerHTML = `
+                            <h2>${prizeAmount}元得獎名單 (${numWinners}名)</h2>
+                            <div class="winner-cards">
+                                ${data.winners.map((winner, index) => `
+                                    <div class="winner-card" style="animation-delay: ${index * 200}ms">
+                                        <img src="./static/images/pig_icon1.png" alt="Winner" class="pig-mascot">
+                                        <span class="winner-name">${winner}</span>
+                                        <span class="prize-amount">${prizeAmount}元</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error selecting winners');
+                    });
+            }, 2000);
+        }
+    </script>
+
+    <style>
+        .winner-display {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .winner-cards {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .winner-card {
+            background: white;
+            color: #FF0033;
+            padding: 15px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: popIn 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        .pig-mascot {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 10px;
+        }
+
+        .winner-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .prize-amount {
+            color: #FFD700;
+            text-shadow: 1px 1px 1px #FF0033;
+            font-weight: bold;
+        }
+
+        @keyframes popIn {
+            0% { 
+                transform: scale(0);
+                opacity: 0;
+            }
+            70% { 
+                transform: scale(1.1);
+                opacity: 0.7;
+            }
+            100% { 
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
+</body>
+</html>
