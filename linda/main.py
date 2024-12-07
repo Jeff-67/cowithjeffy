@@ -2,12 +2,14 @@ from flask import Flask, render_template, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 import logging
 import random
+import os
 
-app = Flask(__name__)
+app = Flask(__name__, instance_path=os.path.join('/tmp', 'instance'))
 
 # Database configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///lottery.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db = SQLAlchemy(app)
 
 # Models
