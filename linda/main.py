@@ -4,6 +4,7 @@ import logging
 import random
 import os
 
+logging.basicConfig(level=logging.INFO)
 app = Flask(__name__, instance_path=os.path.join('/tmp', 'instance'))
 
 # Database configuration
@@ -79,7 +80,8 @@ def select_winner():
         for winner in winners:
             db.session.add(Winner(name=winner, prize_type=prize_type))
         db.session.commit()
-
+        app.logger.info(f"Total employees in database: {Employee.query.count()}")
+        app.logger.info(f"Total winners in database: {Winner.query.count()}")
         return jsonify({'winners': winners})
 
     except Exception as e:
