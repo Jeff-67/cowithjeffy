@@ -29,7 +29,12 @@
                 {% endfor %}
             </div>
         </div>
-
+        <div style="text-align: center; margin-bottom: 20px;">
+            <button onclick="clearCandidates()" style="background-color: white; border: 2px solid red; color: black; padding: 8px 15px; border-radius: 5px;">
+                <img src="./static/images/jko_icon.png" alt="Clear" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 5px;">
+                重設街友
+            </button>
+        </div>
         <!-- Two-column layout for selection and results -->
         <div style="display: flex; justify-content: space-between; width: 90%; max-width: 1200px; margin-top: 20px;">
             <!-- Left Section (Selection Buttons) -->
@@ -140,6 +145,29 @@
                     });
             }, 2000);
         }
+
+        function clearCandidates() {
+            if (confirm('Are you sure you want to reset all candidates? This action cannot be undone.')) {
+                fetch('/clear_candidates', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                })
+                .then(response => response.json())
+                .then(data => {
+                if (data.success) {
+                    const employeeList = document.getElementById('employeeList');
+                    employeeList.innerHTML = ''; // Clear candidate pool
+                    alert(data.message || 'Candidates reset successfully.');
+                } else {
+                    alert('Error resetting candidates: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                alert('Error resetting candidates.');
+                });
+            }
+        }   
     </script>
 
     <style>
