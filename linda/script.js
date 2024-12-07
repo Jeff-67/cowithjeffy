@@ -48,6 +48,25 @@ $(document).ready(function () {
         });
     });
 
+    $("#reset-winners").click(function () {
+        if (confirm("Are you sure you want to reset all winners?")) {
+            $.ajax({
+                url: "/reset",
+                method: "POST",
+                success: function (response) {
+                    if (response.success) {
+                        alert(response.message);
+                    } else {
+                        alert("Error resetting winners: " + response.message);
+                    }
+                },
+                error: function () {
+                    alert("Error resetting winners.");
+                },
+            });
+        }
+    });
+    
     // Clear candidates functionality
     $("#clear-candidates").click(function (event) {
         event.preventDefault(); // Prevent default behavior if it's inside a form

@@ -52,24 +52,35 @@ def add_employee():
 
 @app.route('/select_winner', methods=['GET'])
 def select_winner():
-    prize_type = request.args.get('prize_type')
-    num_winners = int(request.args.get('num_winners', 1))
+    try:
+        prize_type = request.args.get('prize_type')
+        num_winners = int(request.args.get('num_winners', 1))
 
-    # Determine eligible candidates
-    ineligible_names = {w.name for w in Winner.query.filter(Winner.prize_type != prize_type).all()}
-    available_candidates = Employee.query.filter(Employee.name.not_in(ineligible_names)).all()
-    
-    if len(available_candidates) < num_winners:
-        return jsonify({'error': 'Number of winners exceeds number of eligible employees'})
+        # Log request parameters for debugging
+        app.logger.info(f"Selecting {num_winners} winner(s) for prize type: {prize_type}")
 
-    winners = random.sample([e.name for e in available_candidates], num_winners)
+        # Get ineligible candidates (all previous winners)
+        ineligible_names = {w.name for w in Winner.query.all()}
+        app.logger.info(f"Ineligible names: {ineligible_names}")
+        # Filter eligible candidates
+        available_candidates = Employee.query.filter(~Employee.name.in_(ineligible_names)).all()
+        app.logger.info(f"Available candidates: {[e.name for e in available_candidates]}")
+        if len(available_candidates) < num_winners:
+            return jsonify({'error': 'Number of winners exceeds number of eligible employees'})
 
-    # Save winners to database
-    for winner in winners:
-        db.session.add(Winner(name=winner, prize_type=prize_type))
-    db.session.commit()
+        # Randomly select winners
+        winners = random.sample([e.name for e in available_candidates], num_winners)
+        app.logger.info(f"Selected winners: {winners}")
+        # Save winners to the database
+        for winner in winners:
+            db.session.add(Winner(name=winner, prize_type=prize_type))
+        db.session.commit()
 
-    return jsonify({'winners': winners})
+        return jsonify({'winners': winners})
+
+    except Exception as e:
+        app.logger.error(f"Error in selecting winner: {e}")
+        return jsonify({'error': 'An error occurred while selecting winners.'}), 500
 
 @app.route('/reset', methods=['POST'])
 def reset():
@@ -98,6 +109,19 @@ def clear_candidates():
 @app.route('/favicon.ico')
 def favicon():
     return '', 204  # Return an empty response with a "No Content" status
+
+
+@app.route('/reset', methods=['POST'])
+def reset_winners():  # Rename to 'reset_winners'
+    try:
+        db.session.query(Winner).delete()  # Clear all winner entries
+        db.session.commit()
+        app.logger.info("All winners have been reset.")
+        return jsonify({'success': True, 'message': 'All winners have been reset successfully.'})
+    except Exception as e:
+        db.session.rollback()
+        app.logger.error(f"Error resetting winners: {e}")
+        return jsonify({'success': False, 'message': 'Failed to reset winners.'}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

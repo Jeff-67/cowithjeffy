@@ -29,12 +29,20 @@
                 {% endfor %}
             </div>
         </div>
-        <div style="text-align: center; margin-bottom: 20px;">
+        <div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 20px;">
+            <!-- Clear Candidates Button -->
             <button onclick="clearCandidates()" style="background-color: white; border: 2px solid red; color: black; padding: 8px 15px; border-radius: 5px;">
                 <img src="./static/images/jko_icon.png" alt="Clear" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 5px;">
                 重設街友
             </button>
+            
+            <!-- Reset Winners Button -->
+            <button onclick="resetWinners()" style="background-color: white; border: 2px solid blue; color: black; padding: 8px 15px; border-radius: 5px;">
+                <img src="./static/images/reset_icon.png" alt="Reset Winners" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 5px;">
+                重設得獎者
+            </button>
         </div>
+        
         <!-- Two-column layout for selection and results -->
         <div style="display: flex; justify-content: space-between; width: 90%; max-width: 1200px; margin-top: 20px;">
             <!-- Left Section (Selection Buttons) -->
@@ -170,6 +178,28 @@
                 });
             }
         }   
+        function resetWinners() {
+    if (confirm('Are you sure you want to reset all winners? This action cannot be undone.')) {
+        fetch('/reset', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message || 'Winners reset successfully.');
+                const winnerDiv = document.getElementById('winner');
+                winnerDiv.innerHTML = ''; // Clear winner display on frontend
+            } else {
+                alert('Error resetting winners: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error resetting winners.');
+        });
+            }
+        }
     </script>
 
     <style>
