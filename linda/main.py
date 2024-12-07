@@ -1,41 +1,22 @@
-from flask import Flask, render_template, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
-import logging
+from flask import Flask, request, jsonify, render_template, session
 import random
-import os
 
-logging.basicConfig(level=logging.INFO)
-app = Flask(__name__, instance_path=os.path.join('/tmp', 'instance'))
+app = Flask(__name__)
+app.secret_key = '0710'  # Replace with a secure key
 
-# Database configuration
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
-    'DATABASE_URL', 'sqlite:///lottery.db'
-)
+@app.before_request
+def ensure_session_lists():
+    # Initialize session variables if not already present
+    if 'employees' not in session:
+        session['employees'] = []
+    if 'winners' not in session:
+        session['winners'] = []
 
-db = SQLAlchemy(app)
-
-# Models
-class Employee(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), unique=True, nullable=False)
-
-class Winner(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    prize_type = db.Column(db.String(10), nullable=False)
-
-# Initialize database
-with app.app_context():
-    db.create_all()  # Ensure the database is initialized
-    db.session.query(Winner).delete()  # Clear all winners
-    db.session.commit()
-
-# Routes
 @app.route('/')
 def index():
-    employees = Employee.query.all()
-    return render_template('index.html', employees=[e.name for e in employees])
+    # Pass session-stored employees to the template
+    employees = session.get('employees', [])
+    return render_template('index.html', employees=employees)
 
 @app.route('/add_employees', methods=['POST'])
 def add_employee():
@@ -46,12 +27,15 @@ def add_employee():
         return jsonify({'success': False, 'message': 'No names provided'})
     
     valid_names = [name.strip() for name in names if name and name.strip()]
-    existing_names = {e.name for e in Employee.query.all()}
-    new_employees = [name for name in valid_names if name not in existing_names]
+    employees = session.get('employees', [])
+    new_employees = [name for name in valid_names if name not in employees]
     
-    for name in new_employees:
-        db.session.add(Employee(name=name))
-    db.session.commit()
+    employees.extend(new_employees)
+    session['employees'] = employees  # Save back to session
+
+    # Debugging log to confirm addition
+    app.logger.info(f"Employees after addition: {employees}")
+    print(f"Employees after addition: {employees}")
     
     return jsonify({'success': True, 'message': f'{len(new_employees)} employees added.'})
 
@@ -61,68 +45,47 @@ def select_winner():
         prize_type = request.args.get('prize_type')
         num_winners = int(request.args.get('num_winners', 1))
 
-        # Log request parameters for debugging
-        app.logger.info(f"Selecting {num_winners} winner(s) for prize type: {prize_type}")
-
-        # Get ineligible candidates (all previous winners)
-        ineligible_names = {w.name for w in Winner.query.all()}
-        app.logger.info(f"Ineligible names: {ineligible_names}")
-        # Filter eligible candidates
-        available_candidates = Employee.query.filter(~Employee.name.in_(ineligible_names)).all()
-        app.logger.info(f"Available candidates: {[e.name for e in available_candidates]}")
-        if len(available_candidates) < num_winners:
+        # Get employees and winners from session
+        employees = session.get('employees', [])
+        winners = session.get('winners', [])
+        
+        # Debugging log
+        app.logger.info(f"Selecting winners for prize: {prize_type}. Number of winners requested: {num_winners}.")
+        app.logger.info(f"Current winners: {winners}")
+        print(f"Employees: {employees}")
+        print(f"Winners: {winners}")
+        
+        # Get eligible candidates
+        eligible_candidates = [e for e in employees if e not in [w['name'] for w in winners]]
+        app.logger.info(f"Eligible candidates: {eligible_candidates}")
+        print(f"Eligible candidates: {eligible_candidates}")
+        if len(eligible_candidates) < num_winners:
             return jsonify({'error': 'Number of winners exceeds number of eligible employees'})
 
-        # Randomly select winners
-        winners = random.sample([e.name for e in available_candidates], num_winners)
-        app.logger.info(f"Selected winners: {winners}")
-        # Save winners to the database
-        for winner in winners:
-            db.session.add(Winner(name=winner, prize_type=prize_type))
-        db.session.commit()
-        app.logger.info(f"Total employees in database: {Employee.query.count()}")
-        app.logger.info(f"Total winners in database: {Winner.query.count()}")
-        return jsonify({'winners': winners})
+        # Select winners
+        selected_winners = random.sample(eligible_candidates, num_winners)
+        for winner in selected_winners:
+            winners.append({'name': winner, 'prize_type': prize_type})
 
+        session['winners'] = winners  # Save winners back to session
+
+        app.logger.info(f"Selected winners: {selected_winners}")
+        print(f"Selected winners: {selected_winners}")
+        return jsonify({'winners': selected_winners})
     except Exception as e:
-        app.logger.error(f"Error in selecting winner: {e}")
-        return jsonify({'error': 'An error occurred while selecting winners.'}), 500
-    
+        app.logger.error(f"Error selecting winner: {e}")
+        return jsonify({'error': f'An error occurred: {e}'}), 500
 
 @app.route('/clear_candidates', methods=['POST'])
 def clear_candidates():
-    try:
-        # Delete all employees from the database
-        logging.info("Attempting to delete all employees.")
-        num_deleted = Employee.query.delete()
-        db.session.commit()
+    session['employees'] = []  # Clear employees from session
+    return jsonify({'success': True, 'message': 'All candidates cleared.'})
 
-        logging.info(f"Successfully deleted {num_deleted} candidates.")
-        return jsonify({'success': True, 'message': f'All {num_deleted} candidates cleared.'})
-
-    except Exception as e:
-        # Rollback the transaction in case of an error
-        db.session.rollback()
-        logging.error(f"Error deleting employees: {e}")
-        return jsonify({'success': False, 'message': 'Failed to clear candidates due to a server error.'}), 500
-    
-
-@app.route('/favicon.ico')
-def favicon():
-    return '', 204  # Return an empty response with a "No Content" status
-
-
-@app.route('/reset', methods=['POST'])
-def reset_winners():  # Rename to 'reset_winners'
-    try:
-        db.session.query(Winner).delete()  # Clear all winner entries
-        db.session.commit()
-        app.logger.info("All winners have been reset.")
-        return jsonify({'success': True, 'message': 'All winners have been reset successfully.'})
-    except Exception as e:
-        db.session.rollback()
-        app.logger.error(f"Error resetting winners: {e}")
-        return jsonify({'success': False, 'message': 'Failed to reset winners.'}), 500
+@app.route('/reset_winners', methods=['POST'])
+def reset_winners():
+    session['winners'] = []  # Clear winners from session
+    app.logger.info("Winners have been reset.")
+    return jsonify({'success': True, 'message': 'All winners have been reset successfully.'})
 
 if __name__ == '__main__':
     app.run(debug=True)

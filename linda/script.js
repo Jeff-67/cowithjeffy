@@ -3,13 +3,14 @@ $(document).ready(function () {
     $("#add-employee form").submit(function (event) {
         event.preventDefault(); // Prevent default form submission
         const employeeName = $("#employee-name").val();
-
+    
         if (employeeName.trim() !== "") {
             // Send AJAX request to add employee to the server
             $.ajax({
-                url: "/add_employee",
+                url: "/add_employees", // Use the plural endpoint name
                 method: "POST",
-                data: { employee: employeeName },
+                contentType: "application/json", // Ensure JSON format
+                data: JSON.stringify({ names: [employeeName] }), // Wrap name in an array
                 success: function (response) {
                     if (response.success) {
                         // Update the employee list
@@ -30,20 +31,32 @@ $(document).ready(function () {
 
     // Lottery functionality
     $("#select-winner").click(function () {
-        // Send AJAX request to select a winner
+        const prizeType = $("#prize-type").val(); // Assuming a dropdown for prize type
+        const numWinners = $("#num-winners").val(); // Input for number of winners
+    
+        if (!prizeType || !numWinners) {
+            alert("Please provide both prize type and number of winners.");
+            return;
+        }
+    
+        // Send AJAX request to select winners
         $.ajax({
-            url: "/select_winner",
+            url: `/select_winner?prize_type=${prizeType}&num_winners=${numWinners}`,
             method: "GET",
             success: function (response) {
-                if (response.winner) {
-                    // Update the winner announcement
-                    $("#winner-announcement").text(`Congratulations, ${response.winner}!`);
+                if (response.winners) {
+                    const winnerList = response.winners
+                        .map(winner => `<li>${winner}</li>`)
+                        .join("");
+                    $("#winner-announcement").html(
+                        `<p>Congratulations to the winners:</p><ul>${winnerList}</ul>`
+                    );
                 } else {
-                    alert(response.message || "No winner could be selected.");
+                    alert(response.error || "No winner could be selected.");
                 }
             },
             error: function () {
-                alert("Error selecting winner.");
+                alert("Error selecting winners.");
             },
         });
     });
@@ -51,7 +64,7 @@ $(document).ready(function () {
     $("#reset-winners").click(function () {
         if (confirm("Are you sure you want to reset all winners?")) {
             $.ajax({
-                url: "/reset",
+                url: "/reset_winners",
                 method: "POST",
                 success: function (response) {
                     if (response.success) {
@@ -66,31 +79,28 @@ $(document).ready(function () {
             });
         }
     });
-    
+
     // Clear candidates functionality
     $("#clear-candidates").click(function (event) {
-        event.preventDefault(); // Prevent default behavior if it's inside a form
-        if (confirm('Are you sure you want to reset all candidates? This action cannot be undone.')) {
-            fetch('/clear_candidates', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.success) {
+        event.preventDefault(); // Prevent default behavior
+        if (confirm("Are you sure you want to reset all candidates? This action cannot be undone.")) {
+            $.ajax({
+                url: "/clear_candidates",
+                method: "POST",
+                success: function (response) {
+                    if (response.success) {
                         // Clear the employee list on the frontend
                         $("#employee-list ul").empty();
-                        alert(data.message || 'All candidates have been reset.');
+                        alert(response.message || "All candidates have been reset.");
                     } else {
-                        alert('Error resetting candidates: ' + (data.message || 'Unknown error'));
+                        alert("Error resetting candidates: " + (response.message || "Unknown error"));
                     }
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                    alert('Error resetting candidates.');
-                });
+                },
+                error: function () {
+                    alert("Error resetting candidates.");
+                },
+            });
         }
     });
+    
 });
