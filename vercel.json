@@ -1,5 +1,8 @@
 {
-    "rewrites": [
-      { "source": "/(.*)", "destination": "/linda/main" }
-    ]
-  }
+  "builds": [
+    { "src": "linda/main.py", "use": "@vercel/python" }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "/linda/main.py" }
+  ]
+}
