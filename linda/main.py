@@ -93,6 +93,11 @@ def clear_candidates():
         db.session.rollback()
         logging.error(f"Error deleting employees: {e}")
         return jsonify({'success': False, 'message': 'Failed to clear candidates due to a server error.'}), 500
+    
+
+@app.route('/favicon.ico')
+def favicon():
+    return '', 204  # Return an empty response with a "No Content" status
 
 if __name__ == '__main__':
     app.run(debug=True)
