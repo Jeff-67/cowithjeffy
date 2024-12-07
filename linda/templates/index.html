@@ -127,7 +127,9 @@
                         }
                         
                         winnerDiv.innerHTML = `
-                            <h2>${prizeAmount}元得獎名單 (${numWinners}名)</h2>
+                            <h2 style="background-color: white; color: red; padding: 10px; border-radius: 5px; text-align: center;">
+                                ${prizeAmount}元得獎名單 (${numWinners}名)
+                            </h2>
                             <div class="winner-cards">
                                 ${data.winners.map((winner, index) => `
                                     <div class="winner-card" style="animation-delay: ${index * 200}ms">
