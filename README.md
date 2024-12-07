@@ -6,9 +6,9 @@ A web-based lottery system built with Flask that allows organizations to conduct
 
 - **Bulk Employee Entry**: Add multiple employees at once using a text area input
 - **Multiple Prize Tiers**: Support for three prize levels:
-  - ¥10,000 tier
-  - ¥5,000 tier
-  - ¥1,000 tier
+  - $10,000 tier
+  - $5,000 tier
+  - $1,000 tier
 - **Prize Rules**:
   - 10,000 winners cannot win 5,000 or 1,000 prizes
   - 5,000 winners cannot win 10,000 or 1,000 prizes
