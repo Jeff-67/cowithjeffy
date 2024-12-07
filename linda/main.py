@@ -7,8 +7,10 @@ import os
 app = Flask(__name__, instance_path=os.path.join('/tmp', 'instance'))
 
 # Database configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///lottery.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
+    'DATABASE_URL', 'sqlite:///lottery.db'
+)
 
 db = SQLAlchemy(app)
 
@@ -24,7 +26,9 @@ class Winner(db.Model):
 
 # Initialize database
 with app.app_context():
-    db.create_all()
+    db.create_all()  # Ensure the database is initialized
+    db.session.query(Winner).delete()  # Clear all winners
+    db.session.commit()
 
 # Routes
 @app.route('/')
@@ -81,12 +85,7 @@ def select_winner():
     except Exception as e:
         app.logger.error(f"Error in selecting winner: {e}")
         return jsonify({'error': 'An error occurred while selecting winners.'}), 500
-
-@app.route('/reset', methods=['POST'])
-def reset():
-    db.session.query(Winner).delete()
-    db.session.commit()
-    return jsonify({'success': True, 'message': 'Winners reset successfully'})
+    
 
 @app.route('/clear_candidates', methods=['POST'])
 def clear_candidates():
