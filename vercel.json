@@ -1,5 +1,5 @@
 {
     "rewrites": [
-      { "source": "/(.*)", "destination": "/linda/main.py" }
+      { "source": "/(.*)", "destination": "/linda/main" }
     ]
   }
