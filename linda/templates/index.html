@@ -22,9 +22,11 @@
             <h2>Candidate Pool</h2>
             <div id="employeeList" class="name-card-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 5px;">
                 {% for employee in employees %}
-                    <div class="name-card" style="width: 60px; height: 60px; padding: 3px; text-align: center; border-radius: 50%; background-color: #f0f0f0; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                        <img src="./static/images/pig_icon1.png" alt="Employee Icon" style="width: 20px; height: 20px;">
-                        <h3 style="font-size: 12px; margin: 2px 0;">{{ employee }}</h3>
+                    <div class="name-card" style="width: 60px; height: 60px; padding: 3px; text-align: center; border-radius: 50%; background-color: #f0f0f0; display: flex; flex-direction: column; justify-content: space-between; align-items: center;">
+                        <img src="./static/images/pig_icon1.png" alt="Employee Icon" style="width: 20px; height: 20px; margin-top: 5px;">
+                        <div style="width: 100%; height: 25px; display: flex; align-items: center; justify-content: center;">
+                            <h3 style="font-size: 12px; margin: 0; line-height: 1.2;">{{ employee }}</h3>
+                        </div>
                     </div>
                 {% endfor %}
             </div>
@@ -38,7 +40,7 @@
             </button>
             <button onclick="resetWinners()" style="background-color: white; border: 2px solid blue; color: black; padding: 8px 15px; border-radius: 5px;">
                 <img src="./static/images/reset_icon.png" alt="Reset Winners" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 5px;">
-                重設得獎者
+                重設得獎者紀錄
             </button>
         </div>
 
@@ -99,9 +101,11 @@
                     const employeeList = document.getElementById('employeeList');
                     names.forEach(name => {
                         const card = `
-                            <div class="name-card" style="width: 60px; height: 60px; padding: 3px; text-align: center; border-radius: 50%; background-color: #f0f0f0; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                                <img src="./static/images/pig_icon1.png" alt="Employee Icon" style="width: 20px; height: 20px;">
-                                <h3 style="font-size: 12px; margin: 2px 0;">${name}</h3>
+                            <div class="name-card" style="width: 60px; height: 60px; padding: 3px; text-align: center; border-radius: 50%; background-color: #f0f0f0; display: flex; flex-direction: column; justify-content: space-between; align-items: center;">
+                                <img src="./static/images/pig_icon1.png" alt="Employee Icon" style="width: 20px; height: 20px; margin-top: 5px;">
+                                <div style="width: 100%; height: 25px; display: flex; align-items: center; justify-content: center;">
+                                    <h3 style="font-size: 12px; margin: 0; line-height: 1.2;">${name}</h3>
+                                </div>
                             </div>
                         `;
                         employeeList.insertAdjacentHTML('beforeend', card);
@@ -125,7 +129,21 @@
 
             const winnerDiv = document.getElementById('winner');
             winnerDiv.innerHTML = `
-                <h2>抽獎結果</h2>
+                <h2 style="
+                    background: linear-gradient(45deg, #FF0033, #E3001C);
+                    color: white;
+                    padding: 15px 30px;
+                    border-radius: 15px;
+                    text-align: center;
+                    margin: 20px auto;
+                    box-shadow: 0 4px 15px rgba(227, 0, 28, 0.3);
+                    font-size: 24px;
+                    max-width: 80%;
+                    border: 2px solid #fff;
+                    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+                ">
+                    🎉 ${prizeAmount}元得獎名單 (${numWinners}名) 🎉
+                </h2>
                 <div class="shuffling-animation">
                     ${Array(parseInt(numWinners)).fill().map(() => `
                         <div class="shuffling-card">
@@ -145,18 +163,30 @@
                         return;
                     }
                     winnerDiv.innerHTML = `
-                        <h2 style="background-color: white; color: red; padding: 10px; border-radius: 5px; text-align: center;">
-                            ${prizeAmount}元得獎名單 (${numWinners}名)
+                        <h2 style="
+                            background: linear-gradient(45deg, #FF0033, #E3001C);
+                            color: white;
+                            padding: 15px 30px;
+                            border-radius: 15px;
+                            text-align: center;
+                            margin: 20px auto;
+                            box-shadow: 0 4px 15px rgba(227, 0, 28, 0.3);
+                            font-size: 24px;
+                            max-width: 80%;
+                            border: 2px solid #fff;
+                            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+                        ">
+                            🎉 ${prizeAmount}元得獎名單 (${numWinners}名) 🎉
                         </h2>
-                            <div class="winner-cards">
-                                ${data.winners.map((winner, index) => `
-                                    <div class="winner-card" style="animation-delay: ${index * 200}ms">
-                                        <img src="./static/images/pig_icon1.png" alt="Winner" class="pig-mascot">
-                                        <span class="winner-name">${winner}</span>
-                                        <span class="prize-amount">${prizeAmount}元</span>
-                                    </div>
-                                `).join('')}
-                            </div>
+                        <div class="winner-cards">
+                            ${data.winners.map((winner, index) => `
+                                <div class="winner-card" style="animation-delay: ${index * 200}ms">
+                                    <img src="./static/images/pig_icon1.png" alt="Winner" class="pig-mascot">
+                                    <span class="winner-name">${winner}</span>
+                                    <span class="prize-amount">${prizeAmount}元</span>
+                                </div>
+                            `).join('')}
+                        </div>
                     `;
                 })
                 .catch(error => {
