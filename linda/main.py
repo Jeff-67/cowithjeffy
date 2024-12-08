@@ -1,8 +1,13 @@
 from flask import Flask, request, jsonify, render_template, session
+from slack_sdk import WebClient
+from slack_sdk.errors import SlackApiError
 import random
-
+import os
 app = Flask(__name__)
-app.secret_key = '0710'  # Replace with a secure key
+app.secret_key = os.getenv('SESSION_SECRET_KEY')  # Replace with a secure key
+client = WebClient(token=os.getenv('SLACK_OAUTH_TOKEN'))
+channel_id = "C0844RPP6Q3"
+bot_name = "drafting_bot"
 
 @app.before_request
 def ensure_session_lists():
@@ -71,6 +76,8 @@ def select_winner():
 
         app.logger.info(f"Selected winners: {selected_winners}")
         print(f"Selected winners: {selected_winners}")
+        message = f"🎉 {prize_type}得獎名單 ({num_winners}名) 🎉\n{', '.join(selected_winners)}"
+        response = client.chat_postMessage(channel=channel_id, text=message,username=bot_name)
         return jsonify({'winners': selected_winners})
     except Exception as e:
         app.logger.error(f"Error selecting winner: {e}")
