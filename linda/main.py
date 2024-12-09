@@ -41,7 +41,8 @@ def add_employee():
     # Debugging log to confirm addition
     app.logger.info(f"Employees after addition: {employees}")
     print(f"Employees after addition: {employees}")
-    
+    message = f"🎉 {len(new_employees)} 位員工已加入抽獎名單 🎉\n{', '.join(new_employees)}"
+    response = client.chat_postMessage(channel=channel_id, text=message,username=bot_name)
     return jsonify({'success': True, 'message': f'{len(new_employees)} employees added.'})
 
 @app.route('/select_winner', methods=['GET'])
