@@ -6,10 +6,10 @@
 </head>
 <body>
     <div class="floating-mascot">
-        <img src="./static/images/together_68.png" alt="Mascot" class="mascot-image">
+        <img src="{{ url_for('static', filename='images/together_68.png') }}" alt="Mascot" class="mascot-image">
     </div>
     <div class="floating-mascot-right">
-        <img src="./static/images/together_90.png" alt="Mascot Right" class="mascot-image-right">
+        <img src="{{ url_for('static', filename='images/together_90.png') }}" alt="Mascot Right" class="mascot-image-right">
     </div>
     <div class="content-container" style="margin-top: 100px; display: flex; flex-direction: column; align-items: center;">
         <!-- Add Employee Section -->
