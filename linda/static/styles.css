@@ -293,3 +293,90 @@ button:hover {
         opacity: 1;
     }
 }
+
+/* Add these new styles */
+.floating-mascot {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+    /* Increased width from 100px to 200px */
+    width: 200px;  /* You can adjust this value to make it even bigger */
+}
+
+.mascot-image {
+    width: 100%;
+    height: auto;
+    animation: floatAndSpin 4s ease-in-out infinite;
+}
+
+@keyframes floatAndSpin {
+    0% {
+        transform: translateY(0) rotate(0deg);
+    }
+    25% {
+        transform: translateY(-25px) rotate(5deg); /* Increased movement range */
+    }
+    50% {
+        transform: translateY(0) rotate(0deg);
+    }
+    75% {
+        transform: translateY(25px) rotate(-5deg); /* Increased movement range */
+    }
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+}
+
+/* Optional: Add hover effect */
+.floating-mascot:hover .mascot-image {
+    animation: bounce 0.5s ease infinite;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+/* Add these new styles for the top-right image */
+.floating-mascot-right {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    /* Adjust width as needed */
+    width: 200px;  /* You can adjust this value to make it bigger or smaller */
+}
+
+.mascot-image-right {
+    width: 100%;
+    height: auto;
+    animation: floatAndSpinRight 4s ease-in-out infinite;
+}
+
+@keyframes floatAndSpinRight {
+    0% {
+        transform: translateY(0) rotate(0deg);
+    }
+    25% {
+        transform: translateY(-25px) rotate(-5deg); /* Adjusted for opposite rotation */
+    }
+    50% {
+        transform: translateY(0) rotate(0deg);
+    }
+    75% {
+        transform: translateY(25px) rotate(5deg); /* Adjusted for opposite rotation */
+    }
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+}
+
+/* Optional: Add hover effect */
+.floating-mascot-right:hover .mascot-image-right {
+    animation: bounce 0.5s ease infinite;
+}
