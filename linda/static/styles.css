@@ -27,6 +27,7 @@ body {
     width: 300px;
     padding-right: 20px;
     flex-shrink: 0;
+    margin-left: -200px !important;
 }
 
 .right-section {
@@ -172,48 +173,84 @@ button:hover {
 }
 
 .prize-sections {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+    max-width: 500px !important;
+    padding: 10px !important;
+    margin-left: 0 !important;
 }
 
 .prize-section {
-    flex: 1; /* Make sections flexible */
-    max-width: 250px; /* Set a reasonable max-width for each section */
-    background-color: white;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background: white;
     border: 2px solid #FF0033;
+    border-radius: 15px;
+    padding: 12px !important;
+    box-shadow: 0 4px 15px rgba(227, 0, 28, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     text-align: center;
+    margin-bottom: 10px !important;
+}
+
+.prize-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(227, 0, 28, 0.2);
 }
 
 .prize-section h3 {
-    color: #E3001C;
-    margin: 0 0 15px 0;
+    font-size: 1em !important;
+    margin-bottom: 8px !important;
+    color: #333;
+}
+
+.prize-section h3 span {
+    display: block;
+    font-size: 1.2em !important;
+    margin-top: 5px;
+    background: linear-gradient(45deg, #FF0033, #E3001C);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
 }
 
 .prize-section input {
-    margin-bottom: 10px;
-    width: 80%; /* Adjust the input width for better alignment */
+    width: 90% !important;
+    padding: 8px !important;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    margin: 5px auto !important;
+    font-size: 1em;
+    transition: border-color 0.3s ease;
+}
+
+.prize-section input:focus {
+    border-color: #FF0033;
+    outline: none;
 }
 
 .prize-section button {
-    width: 100%; /* Make buttons take the full width of their container */
-    padding: 10px;
-    font-size: 1em;
-    border-radius: 10px;
-    background-color: #E3001C;
+    width: 90% !important;
+    padding: 8px !important;
+    background: linear-gradient(45deg, #FF0033, #E3001C);
     color: white;
     border: none;
+    border-radius: 8px;
+    font-size: 0.9em !important;
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    margin-top: 10px;
 }
 
 .prize-section button:hover {
-    background-color: #FF0033;
     transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(227, 0, 28, 0.3);
+}
+
+.prize-section:nth-child(1),
+.prize-section:nth-child(2) {
+    grid-column: span 2 !important;
+    background: linear-gradient(to right bottom, #fff, #fff8f8);
+    border: 2px solid gold;
 }
 
 .winner-card p {
@@ -379,4 +416,11 @@ button:hover {
 /* Optional: Add hover effect */
 .floating-mascot-right:hover .mascot-image-right {
     animation: bounce 0.5s ease infinite;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .prize-sections {
+        max-width: 100% !important;
+    }
 }
