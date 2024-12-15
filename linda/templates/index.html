@@ -14,13 +14,53 @@
     <div class="content-container" style="margin-top: 100px; display: flex; flex-direction: column; align-items: center;">
         <!-- Add Employee Section -->
         <div style="width: 100%; display: flex; justify-content: center; margin-bottom: 20px;">
-            <form id="bulkAddForm" style="width: 80%; max-width: 600px;">
-                <textarea id="employeeNames" name="employee_names" placeholder="Enter employee names, one per line" required></textarea>
-                <button type="submit" style="background-color: white; border: 2px solid red; color: black; padding: 8px 15px; border-radius: 5px;">
-                    <img src="./static/images/jko_icon.png" alt="Add" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 5px;">
-                    加入街口
-                </button>
-            </form>
+            <div class="pools-container">
+                <!-- Senior Pool (Left) -->
+                <div class="employee-pool senior-pool">
+                    <h3 style="color: #E3001C; margin-bottom: 15px;">
+                        🌟 資深街友 (年資1年以上)
+                        <small style="display: block; font-size: 0.8em; color: #666;">
+                            可參與所有獎項抽獎 (特獎、一獎、二獎、三獎、加碼獎)
+                        </small>
+                    </h3>
+                    <form class="pool-form" data-experience="12">
+                        <textarea 
+                            class="employee-names" 
+                            placeholder="請輸入員工姓名，每行一位
+例如:
+王小明
+李小華
+張小美" 
+                            style="height: 100px;"
+                        ></textarea>
+                        <button type="submit" class="add-button">
+                            <img src="./static/images/jko_icon.png" alt="Add" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 5px;">
+                            加入資深街友
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Junior Pool (Right) -->
+                <div class="employee-pool junior-pool">
+                    <h3 style="color: #FF9900; margin-bottom: 15px;">
+                        🌱 新進街友 (年資3個月~1年)
+                        <small style="display: block; font-size: 0.8em; color: #666;">
+                            可參與三獎及加碼獎抽獎
+                        </small>
+                    </h3>
+                    <form class="pool-form" data-experience="3">
+                        <textarea 
+                            class="employee-names" 
+                            placeholder="請輸入員工姓名，每行一位" 
+                            style="height: 100px;"
+                        ></textarea>
+                        <button type="submit" class="add-button">
+                            <img src="./static/images/jko_icon.png" alt="Add" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 5px;">
+                            加入新進街友
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
 
         <!-- Candidate Pool -->
@@ -130,47 +170,63 @@
     </div>
 
     <script>
-        document.getElementById('bulkAddForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-            const namesText = document.getElementById('employeeNames').value;
-            const names = namesText.split('\n').map(name => name.trim()).filter(name => name !== '');
+        document.querySelectorAll('.pool-form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const experience = parseInt(this.dataset.experience);
+                const namesText = this.querySelector('.employee-names').value;
+                const names = namesText.split('\n')
+                    .map(name => name.trim())
+                    .filter(name => name !== '');
 
-            if (names.length === 0) {
-                alert('Please enter at least one employee name.');
-                return;
-            }
-
-            fetch('/add_employees', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ names: names }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Dynamically update the candidate list
-                    const employeeList = document.getElementById('employeeList');
-                    names.forEach(name => {
-                        const card = `
-                            <div class="name-card" style="width: 60px; height: 60px; padding: 3px; text-align: center; border-radius: 50%; background-color: #f0f0f0; display: flex; flex-direction: column; justify-content: space-between; align-items: center;">
-                                <img src="./static/images/pig_icon1.png" alt="Employee Icon" style="width: 20px; height: 20px; margin-top: 5px;">
-                                <div style="width: 100%; height: 25px; display: flex; align-items: center; justify-content: center;">
-                                    <h3 style="font-size: 12px; margin: 0; line-height: 1.2;">${name}</h3>
-                                </div>
-                            </div>
-                        `;
-                        employeeList.insertAdjacentHTML('beforeend', card);
-                    });
-                    document.getElementById('employeeNames').value = ''; // Clear the textarea
-                } else {
-                    alert('Error adding employees: ' + data.message);
+                if (names.length === 0) {
+                    alert('請至少輸入一位員工的姓名');
+                    return;
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error adding employees.');
+
+                const employees = names.map(name => ({
+                    name: name,
+                    experience: experience
+                }));
+
+                fetch('/add_employees', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ employees: employees }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const employeeList = document.getElementById('employeeList');
+                        employees.forEach(emp => {
+                            const isExperienced = emp.experience >= 12;
+                            const card = `
+                                <div class="name-card" style="width: 80px; height: 80px; padding: 5px; text-align: center; border-radius: 10px; background-color: #f0f0f0; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 2px solid ${isExperienced ? '#E3001C' : '#FF9900'};">
+                                    <img src="./static/images/pig_icon1.png" alt="Employee Icon" style="width: 20px; height: 20px; margin-bottom: 5px;">
+                                    <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+                                        <h3 style="font-size: 12px; margin: 0 0 2px 0; line-height: 1.2;">${emp.name}</h3>
+                                        <span style="font-size: 10px; color: #666;">${isExperienced ? '資深街友' : '新進街友'}</span>
+                                    </div>
+                                </div>
+                            `;
+                            employeeList.insertAdjacentHTML('beforeend', card);
+                        });
+                        
+                        // Clear the form
+                        this.querySelector('.employee-names').value = '';
+                        
+                        // Show success message
+                        alert(`成功加入 ${employees.length} 位員工`);
+                    } else {
+                        alert('加入員工失敗: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('加入員工時發生錯誤');
+                });
             });
         });
 

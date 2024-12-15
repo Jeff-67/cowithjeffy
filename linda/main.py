@@ -25,24 +25,32 @@ def index():
 @app.route('/add_employees', methods=['POST'])
 def add_employee():
     data = request.get_json()
-    names = data.get('names', [])
+    employees_data = data.get('employees', [])
     
-    if not names:
-        return jsonify({'success': False, 'message': 'No names provided'})
+    if not employees_data:
+        return jsonify({'success': False, 'message': 'No employees provided'})
     
-    valid_names = [name.strip() for name in names if name and name.strip()]
     employees = session.get('employees', [])
-    new_employees = [name for name in valid_names if name not in employees]
+    new_employees = []
+    
+    for emp in employees_data:
+        name = emp.get('name', '').strip()
+        experience = emp.get('experience', 0)  # 12 for senior, 3 for junior
+        
+        if name and not any(existing['name'] == name for existing in employees):
+            new_employees.append({
+                'name': name,
+                'experience': experience
+            })
     
     employees.extend(new_employees)
-    session['employees'] = employees  # Save back to session
+    session['employees'] = employees
 
-    # Debugging log to confirm addition
-    app.logger.info(f"Employees after addition: {employees}")
-    print(f"Employees after addition: {employees}")
-    message = f"✅ {len(new_employees)} 位員工已加入抽獎名單 ➡️\n{', '.join(new_employees)}"
-    # response = client.chat_postMessage(channel=channel_id, text=message,username=bot_name)
-    return jsonify({'success': True, 'message': f'{len(new_employees)} employees added.'})
+    employee_names = [emp['name'] for emp in new_employees]
+    message = f"✅ {len(new_employees)} 位員工已加入抽獎名單 ➡️\n{', '.join(employee_names)}"
+    response = client.chat_postMessage(channel=channel_id, text=message, username=bot_name)
+
+    return jsonify({'success': True, 'message': message})
 
 @app.route('/select_winner', methods=['GET'])
 def select_winner():
@@ -50,38 +58,54 @@ def select_winner():
         prize_type = request.args.get('prize_type')
         num_winners = int(request.args.get('num_winners', 1))
 
-        # Get employees and winners from session
         employees = session.get('employees', [])
         winners = session.get('winners', [])
         
-        # Debugging log
-        app.logger.info(f"Selecting winners for prize: {prize_type}. Number of winners requested: {num_winners}.")
-        app.logger.info(f"Current winners: {winners}")
-        print(f"Employees: {employees}")
-        print(f"Winners: {winners}")
+        # Define experience requirements for each prize
+        prize_requirements = {
+            '60000': 12,  # Special prize: 1 year
+            '50000': 12,  # First prize: 1 year
+            '30000': 12,  # Second prize: 1 year
+            '20000': 3,   # Third prize: 3 months
+            '20000_extra': 3,  # Extra prize: 3 months
+            '10000': 3    # Extra prize: 3 months
+        }
         
-        # Get eligible candidates
-        eligible_candidates = [e for e in employees if e not in [w['name'] for w in winners]]
-        app.logger.info(f"Eligible candidates: {eligible_candidates}")
-        print(f"Eligible candidates: {eligible_candidates}")
+        required_experience = prize_requirements.get(prize_type, 12)
+        
+        # Filter eligible candidates based on experience and previous wins
+        eligible_candidates = [
+            emp for emp in employees 
+            if emp['experience'] >= required_experience and  # Check experience requirement
+            not any(w['name'] == emp['name'] for w in winners)  # Check if not already won
+        ]
+
         if len(eligible_candidates) < num_winners:
-            return jsonify({'error': 'Number of winners exceeds number of eligible employees'})
+            return jsonify({'error': '符合資格的員工人數不足'})
 
         # Select winners
         selected_winners = random.sample(eligible_candidates, num_winners)
+        
+        # Add winners to the winners list
         for winner in selected_winners:
-            winners.append({'name': winner, 'prize_type': prize_type})
+            winners.append({
+                'name': winner['name'],
+                'experience': winner['experience'],
+                'prize_type': prize_type
+            })
 
-        session['winners'] = winners  # Save winners back to session
+        session['winners'] = winners
 
-        app.logger.info(f"Selected winners: {selected_winners}")
-        print(f"Selected winners: {selected_winners}")
-        message = f"🎉 {prize_type}得獎名單 ({num_winners}名) 🎉\n{', '.join(selected_winners)}"
-        # response = client.chat_postMessage(channel=channel_id, text=message,username=bot_name)
-        return jsonify({'winners': selected_winners})
+        # Display prize amount (convert 20000_extra to 20000 for display)
+        display_prize = prize_type.replace('_extra', '') if prize_type == '20000_extra' else prize_type
+        winner_names = [w['name'] for w in selected_winners]
+        message = f"🎉 {display_prize}得獎名單 ({num_winners}名) 🎉\n{', '.join(winner_names)}"
+        response = client.chat_postMessage(channel=channel_id, text=message, username=bot_name)
+        return jsonify({'winners': winner_names})
+        
     except Exception as e:
         app.logger.error(f"Error selecting winner: {e}")
-        return jsonify({'error': f'An error occurred: {e}'}), 500
+        return jsonify({'error': f'發生錯誤: {e}'}), 500
 
 @app.route('/clear_candidates', methods=['POST'])
 def clear_candidates():
