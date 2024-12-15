@@ -31,6 +31,7 @@ body {
 
 .right-section {
     flex: 1;
+    margin-left: 200px;
     padding-left: 20px;
     min-height: 400px;
     overflow-y: auto;
@@ -299,8 +300,7 @@ button:hover {
     justify-items: center;
     width: 100%;
     margin-top: 20px;
-    position: relative;
-    z-index: 2;
+    margin-left: 50px;
 }
 
 .winner-card {
