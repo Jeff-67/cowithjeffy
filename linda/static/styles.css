@@ -26,12 +26,12 @@ body {
     width: 300px;
     padding-right: 20px;
     flex-shrink: 0;
-    margin-left: -200px;
+    margin-left: 0px;
 }
 
 .right-section {
     flex: 1;
-    margin-left: 200px;
+    margin-left: 50px;
     padding-left: 20px;
     min-height: 400px;
     overflow-y: auto;
@@ -579,4 +579,30 @@ button:hover {
     .employee-pool {
         width: 100%;
     }
+}
+
+.custom-prize-input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5px;
+}
+
+.custom-prize-input input {
+    width: 120px;
+    padding: 5px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    margin-right: 5px;
+    text-align: right;
+}
+
+.custom-prize-input span {
+    color: #E3001C;
+    font-weight: bold;
+}
+
+#section_custom {
+    border: 2px solid #4CAF50;
+    background: linear-gradient(to right bottom, #fff, #f0fff0);
 }

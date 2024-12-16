@@ -67,11 +67,18 @@ def select_winner():
             '50000': 12,  # First prize: 1 year
             '30000': 12,  # Second prize: 1 year
             '20000': 3,   # Third prize: 3 months
-            '20000_extra': 3,  # Extra prize: 3 months
             '10000': 3    # Extra prize: 3 months
         }
         
-        required_experience = prize_requirements.get(prize_type, 12)
+        # Check if prize_type is a custom amount
+        try:
+            prize_amount = int(prize_type)
+            # If prize amount is >= 30000, require 1 year experience
+            # If prize amount < 30000, require 3 months experience
+            required_experience = 12 if prize_amount >= 30000 else 3
+        except ValueError:
+            # If prize_type is not a number, use predefined requirements
+            required_experience = prize_requirements.get(prize_type, 12)
         
         # Filter eligible candidates based on experience and previous wins
         eligible_candidates = [
@@ -99,7 +106,7 @@ def select_winner():
         # Display prize amount (convert 20000_extra to 20000 for display)
         display_prize = prize_type.replace('_extra', '') if prize_type == '20000_extra' else prize_type
         winner_names = [w['name'] for w in selected_winners]
-        message = f"🎉 {display_prize}得獎名單 ({num_winners}名) 🎉\n{', '.join(winner_names)}"
+        message = f"🎉 {display_prize}元得獎名單 ({num_winners}名) 🎉\n{', '.join(winner_names)}"
         response = client.chat_postMessage(channel=channel_id, text=message, username=bot_name)
         return jsonify({'winners': winner_names})
         

@@ -5,12 +5,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <div class="floating-mascot">
+    <!-- <div class="floating-mascot">
         <img src="{{ url_for('static', filename='images/together_68.png') }}" alt="Mascot" class="mascot-image">
     </div>
     <div class="floating-mascot-right">
         <img src="{{ url_for('static', filename='images/together_90.png') }}" alt="Mascot Right" class="mascot-image-right">
-    </div>
+    </div> -->
     <div class="content-container" style="margin-top: 100px; display: flex; flex-direction: column; align-items: center;">
         <!-- Add Employee Section -->
         <div style="width: 100%; display: flex; justify-content: center; margin-bottom: 20px;">
@@ -138,7 +138,7 @@
                         </button>
                     </div>
 
-                    <div class="prize-section" id="section20000_extra">
+                    <!-- <div class="prize-section" id="section20000_extra">
                         <h3>加碼獎
                             <span>$20,000</span>
                         </h3>
@@ -146,7 +146,7 @@
                         <button onclick="selectWinner('20000_extra', document.getElementById('winners20000_extra').value)">
                             💫 抽出加碼獎得獎者
                         </button>
-                    </div>
+                    </div> -->
 
                     <div class="prize-section" id="section10000">
                         <h3>加碼獎
@@ -155,6 +155,30 @@
                         <input type="number" id="winners10000" name="winners10000" placeholder="得獎者人數" min="1" required>
                         <button onclick="selectWinner('10000', document.getElementById('winners10000').value)">
                             🎊 抽出加碼獎得獎者
+                        </button>
+                    </div>
+
+                    <div class="prize-section" id="section_custom">
+                        <h3>加碼獎
+                            <div class="custom-prize-input">
+                                <input type="number" 
+                                       id="custom_prize_amount" 
+                                       name="custom_prize_amount" 
+                                       placeholder="輸入獎金金額" 
+                                       min="1000" 
+                                       step="1000"
+                                       style="width: 120px; margin-right: 5px;">
+                                <span>元</span>
+                            </div>
+                        </h3>
+                        <input type="number" 
+                               id="winners_custom" 
+                               name="winners_custom" 
+                               placeholder="得獎者人數" 
+                               min="1" 
+                               required>
+                        <button onclick="selectCustomWinner()">
+                            🎊 抽出得獎者
                         </button>
                     </div>
                 </div>
@@ -337,6 +361,89 @@
                 console.error('Error:', error);
                 alert('Error resetting winners.');
             });
+        }
+
+        function selectCustomWinner() {
+            const prizeAmount = document.getElementById('custom_prize_amount').value;
+            const numWinners = document.getElementById('winners_custom').value;
+            
+            if (!prizeAmount || prizeAmount < 1000) {
+                alert('請輸入至少1000元的獎金金額');
+                return;
+            }
+            
+            if (!numWinners || numWinners < 1) {
+                alert('請輸入有效的得獎者人數');
+                return;
+            }
+
+            const winnerDiv = document.getElementById('winner');
+            winnerDiv.innerHTML = `
+                <h2 style="
+                    background: linear-gradient(45deg, #FF0033, #E3001C);
+                    color: white;
+                    padding: 15px 30px;
+                    border-radius: 15px;
+                    text-align: center;
+                    margin: 20px auto;
+                    box-shadow: 0 4px 15px rgba(227, 0, 28, 0.3);
+                    font-size: 24px;
+                    max-width: 80%;
+                    border: 2px solid #fff;
+                    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+                ">
+                    🎉 ${prizeAmount}元得獎名單 (${numWinners}名) 🎉
+                </h2>
+                <div class="shuffling-animation">
+                    ${Array(parseInt(numWinners)).fill().map(() => `
+                        <div class="shuffling-card">
+                            <img src="./static/images/pig_icon1.png" alt="Shuffling" class="pig-mascot">
+                            <p>抽獎中...</p>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            setTimeout(() => {
+                fetch(`/select_winner?num_winners=${numWinners}&prize_type=${prizeAmount}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                        return;
+                    }
+                    winnerDiv.innerHTML = `
+                        <h2 style="
+                            background: linear-gradient(45deg, #FF0033, #E3001C);
+                            color: white;
+                            padding: 15px 30px;
+                            border-radius: 15px;
+                            text-align: center;
+                            margin: 20px auto;
+                            box-shadow: 0 4px 15px rgba(227, 0, 28, 0.3);
+                            font-size: 24px;
+                            max-width: 80%;
+                            border: 2px solid #fff;
+                            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+                        ">
+                            🎉 ${prizeAmount}元得獎名單 (${numWinners}名) 🎉
+                        </h2>
+                        <div class="winner-cards">
+                            ${data.winners.map((winner, index) => `
+                                <div class="winner-card" style="animation-delay: ${index * 200}ms">
+                                    <img src="./static/images/pig_icon1.png" alt="Winner" class="pig-mascot">
+                                    <span class="winner-name">${winner}</span>
+                                    <span class="prize-amount">${prizeAmount}元</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error selecting winners');
+                });
+            }, 2000);
         }
     </script>
 </body>
