@@ -22,7 +22,7 @@ body {
     z-index: 1;
 }
 
-.left-section {
+/* .left-section {
     width: 300px;
     padding-right: 20px;
     flex-shrink: 0;
@@ -35,7 +35,7 @@ body {
     padding-left: 20px;
     min-height: 400px;
     overflow-y: auto;
-}
+} */
 
 h1 {
     font-size: 2.5em;
@@ -194,8 +194,8 @@ button:hover {
     display: grid;
     grid-template-columns: 1fr;
     gap: 10px;
-    width: 100%;
-    margin-left: -100px;
+    width: 70%;
+    margin-left: 0px;
 }
 
 .prize-section {

@@ -91,103 +91,94 @@
         </div>
 
         <!-- Two-column layout for selection and results -->
-        <div style="display: flex; justify-content: space-between; width: 90%; max-width: 1200px; margin-top: 20px;">
+        <div style="display: flex; justify-content: center; width: 90%; max-width: 1200px; margin-top: 20px;">
             <!-- Left Section (Selection Buttons) -->
-            <div class="left-section">
-                <div class="prize-sections">
-                    <!-- Special Prize -->
-                    <div class="prize-section" id="section60000">
-                        <h3>特獎 
-                            <span>$60,000</span>
-                        </h3>
-                        <input type="number" id="winners60000" name="winners60000" placeholder="得獎者人數" min="1" required>
-                        <button onclick="selectWinner('60000', document.getElementById('winners60000').value)">
-                            🎉 抽出特獎得獎者
-                        </button>
-                    </div>
-
-                    <!-- First Prize -->
-                    <div class="prize-section" id="section50000">
-                        <h3>一獎
-                            <span>$50,000</span>
-                        </h3>
-                        <input type="number" id="winners50000" name="winners50000" placeholder="得獎者人數" min="1" required>
-                        <button onclick="selectWinner('50000', document.getElementById('winners50000').value)">
-                            🎯 抽出一獎得獎者
-                        </button>
-                    </div>
-
-                    <!-- Other prizes -->
-                    <div class="prize-section" id="section30000">
-                        <h3>二獎
-                            <span>$30,000</span>
-                        </h3>
-                        <input type="number" id="winners30000" name="winners30000" placeholder="得獎者人數" min="1" required>
-                        <button onclick="selectWinner('30000', document.getElementById('winners30000').value)">
-                            ✨ 抽出二獎得獎者
-                        </button>
-                    </div>
-
-                    <div class="prize-section" id="section20000">
-                        <h3>三獎
-                            <span>$20,000</span>
-                        </h3>
-                        <input type="number" id="winners20000" name="winners20000" placeholder="得獎者人數" min="1" required>
-                        <button onclick="selectWinner('20000', document.getElementById('winners20000').value)">
-                            🌟 抽出三獎得獎者
-                        </button>
-                    </div>
-
-                    <!-- <div class="prize-section" id="section20000_extra">
-                        <h3>加碼獎
-                            <span>$20,000</span>
-                        </h3>
-                        <input type="number" id="winners20000_extra" name="winners20000_extra" placeholder="得獎者人數" min="1" required>
-                        <button onclick="selectWinner('20000_extra', document.getElementById('winners20000_extra').value)">
-                            💫 抽出加碼獎得獎者
-                        </button>
-                    </div> -->
-
-                    <div class="prize-section" id="section10000">
-                        <h3>加碼獎
-                            <span>$10,000</span>
-                        </h3>
-                        <input type="number" id="winners10000" name="winners10000" placeholder="得獎者人數" min="1" required>
-                        <button onclick="selectWinner('10000', document.getElementById('winners10000').value)">
-                            🎊 抽出加碼獎得獎者
-                        </button>
-                    </div>
-
-                    <div class="prize-section" id="section_custom">
-                        <h3>加碼獎
-                            <div class="custom-prize-input">
-                                <input type="number" 
-                                       id="custom_prize_amount" 
-                                       name="custom_prize_amount" 
-                                       placeholder="輸入獎金金額" 
-                                       min="1000" 
-                                       step="1000"
-                                       style="width: 120px; margin-right: 5px;">
-                                <span>元</span>
-                            </div>
-                        </h3>
-                        <input type="number" 
-                               id="winners_custom" 
-                               name="winners_custom" 
-                               placeholder="得獎者人數" 
-                               min="1" 
-                               required>
-                        <button onclick="selectCustomWinner()">
-                            🎊 抽出得獎者
-                        </button>
-                    </div>
+            <div class="prize-sections">
+                <!-- Special Prize -->
+                <div class="prize-section" id="section60000">
+                    <h3>特獎 
+                        <span>$60,000</span>
+                    </h3>
+                    <input type="number" id="winners60000" name="winners60000" placeholder="得獎者人數" min="1" required>
+                    <button onclick="selectWinner('60000', document.getElementById('winners60000').value)">
+                        🎉 抽出特獎得獎者
+                    </button>
                 </div>
-            </div>
 
-            <!-- Right Section (Results) -->
-            <div class="right-section" style="flex: 1; margin-left: 20px;">
-                <div id="winner" class="winner-display">
-                    <!-- Winners will be displayed here -->
+                <!-- First Prize -->
+                <div class="prize-section" id="section50000">
+                    <h3>一獎
+                        <span>$50,000</span>
+                    </h3>
+                    <input type="number" id="winners50000" name="winners50000" placeholder="得獎者人數" min="1" required>
+                    <button onclick="selectWinner('50000', document.getElementById('winners50000').value)">
+                        🎯 抽出一獎得獎者
+                    </button>
+                </div>
+
+                <!-- Other prizes -->
+                <div class="prize-section" id="section30000">
+                    <h3>二獎
+                        <span>$30,000</span>
+                    </h3>
+                    <input type="number" id="winners30000" name="winners30000" placeholder="得獎者人數" min="1" required>
+                    <button onclick="selectWinner('30000', document.getElementById('winners30000').value)">
+                        ✨ 抽出二獎得獎者
+                    </button>
+                </div>
+
+                <div class="prize-section" id="section20000">
+                    <h3>三獎
+                        <span>$20,000</span>
+                    </h3>
+                    <input type="number" id="winners20000" name="winners20000" placeholder="得獎者人數" min="1" required>
+                    <button onclick="selectWinner('20000', document.getElementById('winners20000').value)">
+                        🌟 抽出三獎得獎者
+                    </button>
+                </div>
+
+                <!-- <div class="prize-section" id="section20000_extra">
+                    <h3>加碼獎
+                        <span>$20,000</span>
+                    </h3>
+                    <input type="number" id="winners20000_extra" name="winners20000_extra" placeholder="得獎者人數" min="1" required>
+                    <button onclick="selectWinner('20000_extra', document.getElementById('winners20000_extra').value)">
+                        💫 抽出加碼獎得獎者
+                    </button>
+                </div> -->
+
+                <div class="prize-section" id="section10000">
+                    <h3>加碼獎
+                        <span>$10,000</span>
+                    </h3>
+                    <input type="number" id="winners10000" name="winners10000" placeholder="得獎者人數" min="1" required>
+                    <button onclick="selectWinner('10000', document.getElementById('winners10000').value)">
+                        🎊 抽出加碼獎得獎者
+                    </button>
+                </div>
+
+                <div class="prize-section" id="section_custom">
+                    <h3>加碼獎
+                        <div class="custom-prize-input">
+                            <input type="number" 
+                                   id="custom_prize_amount" 
+                                   name="custom_prize_amount" 
+                                   placeholder="輸入獎金金額" 
+                                   min="1000" 
+                                   step="1000"
+                                   style="width: 120px; margin-right: 5px;">
+                            <span>元</span>
+                        </div>
+                    </h3>
+                    <input type="number" 
+                           id="winners_custom" 
+                           name="winners_custom" 
+                           placeholder="得獎者人數" 
+                           min="1" 
+                           required>
+                    <button onclick="selectCustomWinner()">
+                        🎊 抽出得獎者
+                    </button>
                 </div>
             </div>
         </div>
