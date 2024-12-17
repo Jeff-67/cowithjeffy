@@ -260,42 +260,38 @@
                 return;
             }
 
-            const winnerDiv = document.getElementById('winner');
-            winnerDiv.innerHTML = `
-                <h2 style="
-                    background: linear-gradient(45deg, #FF0033, #E3001C);
-                    color: white;
-                    padding: 15px 30px;
-                    border-radius: 15px;
-                    text-align: center;
-                    margin: 20px auto;
-                    box-shadow: 0 4px 15px rgba(227, 0, 28, 0.3);
-                    font-size: 24px;
-                    max-width: 80%;
-                    border: 2px solid #fff;
-                    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-                ">
-                    🎉 ${prizeAmount === '20000_extra' ? '加碼獎20000' : prizeAmount}元得獎名單 (${numWinners}名) 🎉
-                </h2>
+            // Show modal
+            const modal = document.getElementById('prizeModal');
+            const modalContent = modal.querySelector('.modal-content');
+            const modalWinner = document.getElementById('modalWinner');
+            
+            // Initial state - transparent background
+            modal.style.display = 'block';
+            modalContent.classList.remove('show-winners');
+
+            // Show animation
+            modalWinner.innerHTML = `
                 <div class="shuffling-animation">
-                    ${Array(parseInt(numWinners)).fill().map(() => `
-                        <div class="shuffling-card">
-                            <img src="./static/images/pig_icon1.png" alt="Shuffling" class="pig-mascot">
-                            <p>抽獎中...</p>
-                        </div>
-                    `).join('')}
+                    <p style="font-size: 40px; color: #FFFFFF; font-weight: bold; margin-top: 20px;">抽獎中...</p>
+                    <img src="./static/images/animate_2.gif" alt="Shuffling" class="shuffling-gif">
                 </div>
             `;
 
+            // After animation, show winners
             setTimeout(() => {
                 fetch(`/select_winner?num_winners=${numWinners}&prize_type=${prizeAmount}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.error) {
                         alert(data.error);
+                        modal.style.display = 'none';
                         return;
                     }
-                    winnerDiv.innerHTML = `
+                    
+                    // Add white background before showing winners
+                    modalContent.classList.add('show-winners');
+                    
+                    modalWinner.innerHTML = `
                         <h2 style="
                             background: linear-gradient(45deg, #FF0033, #E3001C);
                             color: white;
@@ -325,6 +321,7 @@
                 .catch(error => {
                     console.error('Error:', error);
                     alert('Error selecting winners');
+                    modal.style.display = 'none';
                 });
             }, 2000);
         }
@@ -377,42 +374,38 @@
                 return;
             }
 
-            const winnerDiv = document.getElementById('winner');
-            winnerDiv.innerHTML = `
-                <h2 style="
-                    background: linear-gradient(45deg, #FF0033, #E3001C);
-                    color: white;
-                    padding: 15px 30px;
-                    border-radius: 15px;
-                    text-align: center;
-                    margin: 20px auto;
-                    box-shadow: 0 4px 15px rgba(227, 0, 28, 0.3);
-                    font-size: 24px;
-                    max-width: 80%;
-                    border: 2px solid #fff;
-                    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-                ">
-                    🎉 ${prizeAmount}元得獎名單 (${numWinners}名) 🎉
-                </h2>
+            // Show modal
+            const modal = document.getElementById('prizeModal');
+            const modalContent = modal.querySelector('.modal-content');
+            const modalWinner = document.getElementById('modalWinner');
+            
+            // Initial state - transparent background
+            modal.style.display = 'block';
+            modalContent.classList.remove('show-winners');
+
+            // Show animation
+            modalWinner.innerHTML = `
                 <div class="shuffling-animation">
-                    ${Array(parseInt(numWinners)).fill().map(() => `
-                        <div class="shuffling-card">
-                            <img src="./static/images/pig_icon1.png" alt="Shuffling" class="pig-mascot">
-                            <p>抽獎中...</p>
-                        </div>
-                    `).join('')}
+                    <p style="font-size: 40px; color: #FFFFFF; font-weight: bold; margin-top: 20px;">抽獎中...</p>
+                    <img src="./static/images/animate_2.gif" alt="Shuffling" class="shuffling-gif">
                 </div>
             `;
 
+            // After animation, show winners
             setTimeout(() => {
                 fetch(`/select_winner?num_winners=${numWinners}&prize_type=${prizeAmount}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.error) {
                         alert(data.error);
+                        modal.style.display = 'none';
                         return;
                     }
-                    winnerDiv.innerHTML = `
+                    
+                    // Add white background before showing winners
+                    modalContent.classList.add('show-winners');
+                    
+                    modalWinner.innerHTML = `
                         <h2 style="
                             background: linear-gradient(45deg, #FF0033, #E3001C);
                             color: white;
@@ -442,9 +435,38 @@
                 .catch(error => {
                     console.error('Error:', error);
                     alert('Error selecting winners');
+                    modal.style.display = 'none';
                 });
             }, 2000);
         }
+
+        // Add event listeners for modal close button
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('prizeModal');
+            const closeBtn = document.querySelector('.close-modal');
+
+            closeBtn.onclick = function() {
+                modal.style.display = "none";
+            }
+
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        });
     </script>
+
+    <!-- Add this before </body> -->
+    <div id="prizeModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-body">
+                <div id="modalWinner" class="winner-display">
+                    <!-- Winners will be displayed here -->
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

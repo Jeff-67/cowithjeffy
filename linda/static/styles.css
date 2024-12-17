@@ -285,71 +285,72 @@ button:hover {
 
 .shuffling-animation {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
-    gap: 20px;
     padding: 20px;
     text-align: center;
 }
 
-.shuffling-card {
-    display: inline-block;
-    padding: 15px;
-    margin: 10px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    animation: shuffle 0.5s infinite;
-    width: 180px;
-}
-
-.shuffling-card img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin-bottom: 10px;
+.shuffling-gif {
+    width: 600px;
+    height: auto;
+    margin: 20px 0;
 }
 
 .winner-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
+    gap: 20px;
     justify-items: center;
-    width: 100%;
-    margin-top: 20px;
-    margin-left: 50px;
+    align-items: center;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
 .winner-card {
-    width: 200px;
-    animation: popIn 0.5s ease-out forwards;
-    padding: 15px;
-    margin: 0;
-    opacity: 0;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 180px;
+    text-align: center;
+    animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+.winner-card img.pig-mascot {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 10px;
 }
 
 .winner-card .winner-name {
-    font-size: 18px;
+    font-size: 24px;
     font-weight: bold;
     margin: 10px 0;
     word-wrap: break-word;
     overflow-wrap: break-word;
-    color: #E3001C;
 }
 
 .winner-card .prize-amount {
-    font-size: 14px;
-    color: #FF6B6B;
-    display: block;
-    margin-top: 5px;
+    color: #E3001C;
+    font-weight: bold;
 }
 
-.winner-card img {
-    width: 40px;
-    height: 40px;
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @keyframes popIn {
@@ -606,4 +607,57 @@ button:hover {
 #section_custom {
     border: 2px solid #4CAF50;
     background: linear-gradient(to right bottom, #fff, #f0fff0);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background-color: transparent; /* Initially transparent */
+    margin: 15% auto;
+    padding: 20px;
+    width: 80%;
+    max-width: 800px;
+    border-radius: 15px;
+    transition: background-color 0.3s ease;
+}
+
+/* Style for when showing winners */
+.modal-content.show-winners {
+    background-color: #fefefe;
+    border: 1px solid #888;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+@keyframes modalPopIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.close-modal {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-modal:hover {
+    color: #E3001C;
 }
