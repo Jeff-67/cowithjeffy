@@ -194,7 +194,8 @@ button:hover {
     display: grid;
     grid-template-columns: 1fr;
     gap: 10px;
-    width: 70%;
+    width: 100%;
+    max-width: 800px; /* Adjust the maximum width as needed */
     margin-left: 0px;
 }
 
@@ -215,14 +216,15 @@ button:hover {
 }
 
 .prize-section h3 {
-    font-size: 1em !important;
+    font-size: 1.5em; /* Increase the font size */
+    padding: 10px; /* Add some padding */
     margin-bottom: 8px !important;
     color: #333;
 }
 
 .prize-section h3 span {
     display: block;
-    font-size: 1.2em !important;
+    font-size: 1.8em; /* Increase the font size of the prize amount */
     margin-top: 5px;
     background: linear-gradient(45deg, #FF0033, #E3001C);
     -webkit-background-clip: text;
@@ -233,11 +235,11 @@ button:hover {
 
 .prize-section input {
     width: 90% !important;
-    padding: 8px !important;
+    padding: 10px; /* Add some padding */
     border: 2px solid #ddd;
     border-radius: 8px;
     margin: 5px auto !important;
-    font-size: 1em;
+    font-size: 1.1em; /* Increase the font size of input and button */
     transition: border-color 0.3s ease;
 }
 
@@ -248,7 +250,7 @@ button:hover {
 
 .prize-section button {
     width: 90% !important;
-    padding: 8px !important;
+    padding: 10px; /* Add some padding */
     background: linear-gradient(45deg, #FF0033, #E3001C);
     color: white;
     border: none;
@@ -299,28 +301,41 @@ button:hover {
 }
 
 .winner-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 20px;
-    justify-items: center;
-    align-items: center;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
 }
 
 .winner-card {
+    width: 180px;
+    padding: 10px;
+    text-align: center;
+    border-radius: 10px;
+    background-color: #f0f0f0;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
-    background-color: #fff;
-    border-radius: 15px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 180px;
-    text-align: center;
-    animation: fadeIn 0.5s ease-in-out forwards;
+    align-items: center;
+    border: 2px solid #E3001C;
+}
+
+.winner-card .pig-mascot,
+.winner-card .winner-name,
+.winner-card .prize-amount {
+    animation: modalPopIn 0.3s ease-out;
+}
+
+.winner-card .pig-mascot {
+    animation-delay: 0s;
+}
+
+.winner-card .winner-name {
+    animation-delay: 0.1s;
+}
+
+.winner-card .prize-amount {
+    animation-delay: 0.2s;
 }
 
 .winner-card img.pig-mascot {
@@ -622,11 +637,13 @@ button:hover {
 }
 
 .modal-content {
-    background-color: transparent; /* Initially transparent */
-    margin: 15% auto;
+    background-color: transparent;
+    margin: 5% auto;
     padding: 20px;
     width: 80%;
-    max-width: 800px;
+    max-width: 1200px;
+    max-height: 80vh;
+    overflow-y: auto;
     border-radius: 15px;
     transition: background-color 0.3s ease;
 }
@@ -636,6 +653,8 @@ button:hover {
     background-color: #fefefe;
     border: 1px solid #888;
     box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    max-height: 80vh;
+    overflow-y: auto;
 }
 
 @keyframes modalPopIn {
@@ -660,4 +679,129 @@ button:hover {
 
 .close-modal:hover {
     color: #E3001C;
+}
+
+.prize-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none; /* Initially hide all layers */
+    z-index: 1; /* Adjust z-index as needed */
+}
+
+/* Show the first layer by default */
+.prize-layer:first-child {
+    display: block;
+}
+
+/* Add these styles to the existing file */
+
+/* Adjust the positioning and sizing of the prize layers */
+.prize-layer {
+    position: relative;
+    z-index: 1;
+    opacity: 1;
+    transform: translateY(50px); /* Adjust the value to move the layers down */
+}
+
+.prize-layer.active {
+    /* Styles for the active layer */
+    z-index: 2;
+    opacity: 1;
+    transform: translateY(0); /* Reset the translation for the active layer */
+}
+
+/* Adjust the width of the prize sections */
+.prize-sections {
+    width: 100%;
+    max-width: 800px; /* Adjust the maximum width as needed */
+}
+
+/* Adjust the spacing between prize sections */
+.prize-section {
+    margin-bottom: 20px; /* Increase or decrease the value as needed */
+}
+
+/* Adjust the font size and spacing for better readability on smaller screens */
+@media (max-width: 768px) {
+    .prize-section h3 {
+        font-size: 1.2em;
+    }
+
+    .prize-section h3 span {
+        font-size: 1.4em;
+    }
+
+    .prize-section input,
+    .prize-section button {
+        font-size: 0.9em;
+        padding: 6px;
+    }
+}
+
+/* Adjust the size and positioning of the floating mascots */
+.floating-mascot,
+.floating-mascot-right {
+    width: 150px; /* Adjust the width as needed */
+    top: 80px; /* Adjust the top position as needed */
+}
+
+/* Adjust the animation for the floating mascots on smaller screens */
+@media (max-width: 768px) {
+    @keyframes floatAndSpin {
+        0% {
+            transform: translateY(0) rotate(0deg);
+        }
+        25% {
+            transform: translateY(-15px) rotate(5deg);
+        }
+        50% {
+            transform: translateY(0) rotate(0deg);
+        }
+        75% {
+            transform: translateY(15px) rotate(-5deg);
+        }
+        100% {
+            transform: translateY(0) rotate(0deg);
+        }
+    }
+
+    @keyframes floatAndSpinRight {
+        0% {
+            transform: translateY(0) rotate(0deg);
+        }
+        25% {
+            transform: translateY(-15px) rotate(-5deg);
+        }
+        50% {
+            transform: translateY(0) rotate(0deg);
+        }
+        75% {
+            transform: translateY(15px) rotate(5deg);
+        }
+        100% {
+            transform: translateY(0) rotate(0deg);
+        }
+    }
+}
+
+.prize-nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.prize-nav-buttons button {
+    width: auto !important;
+    padding: 6px 12px !important;
+    font-size: 0.9em !important;
+}
+
+/* Add these styles to your styles.css file */
+.custom-winner-button {
+    font-size: 1.2em; /* Increase font size */
+    padding: 12px 24px; /* Increase padding */
+    border-radius: 8px; /* Adjust border radius */
 }

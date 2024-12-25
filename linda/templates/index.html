@@ -63,6 +63,18 @@
             </div>
         </div>
 
+        <!-- Buttons -->
+        <div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 20px;">
+            <button onclick="clearCandidates()" style="background-color: white; border: 2px solid red; color: black; padding: 8px 15px; border-radius: 5px;">
+                <img src="./static/images/jko_icon.png" alt="Clear" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 5px;">
+                重設街友
+            </button>
+            <button onclick="resetWinners()" style="background-color: white; border: 2px solid blue; color: black; padding: 8px 15px; border-radius: 5px;">
+                <img src="./static/images/reset_icon.png" alt="Reset Winners" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 5px;">
+                重設得獎者紀錄
+            </button>
+        </div>
+
         <!-- Candidate Pool -->
         <div style="width: 100%; text-align: center; margin-bottom: 20px;">
             <h2>Candidate Pool</h2>
@@ -78,110 +90,110 @@
             </div>
         </div>
 
-        <!-- Buttons -->
-        <div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 20px;">
-            <button onclick="clearCandidates()" style="background-color: white; border: 2px solid red; color: black; padding: 8px 15px; border-radius: 5px;">
-                <img src="./static/images/jko_icon.png" alt="Clear" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 5px;">
-                重設街友
-            </button>
-            <button onclick="resetWinners()" style="background-color: white; border: 2px solid blue; color: black; padding: 8px 15px; border-radius: 5px;">
-                <img src="./static/images/reset_icon.png" alt="Reset Winners" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 5px;">
-                重設得獎者紀錄
-            </button>
-        </div>
 
-        <!-- Two-column layout for selection and results -->
-        <div style="display: flex; justify-content: center; width: 90%; max-width: 1200px; margin-top: 20px;">
             <!-- Left Section (Selection Buttons) -->
             <div class="prize-sections">
                 <!-- Special Prize -->
-                <div class="prize-section" id="section60000">
-                    <h3>特獎 
-                        <span>$60,000</span>
-                    </h3>
-                    <input type="number" id="winners60000" name="winners60000" placeholder="得獎者人數" min="1" required>
-                    <button onclick="selectWinner('60000', document.getElementById('winners60000').value)">
-                        🎉 抽出特獎得獎者
-                    </button>
-                </div>
-
-                <!-- First Prize -->
-                <div class="prize-section" id="section50000">
-                    <h3>一獎
-                        <span>$50,000</span>
-                    </h3>
-                    <input type="number" id="winners50000" name="winners50000" placeholder="得獎者人數" min="1" required>
-                    <button onclick="selectWinner('50000', document.getElementById('winners50000').value)">
-                        🎯 抽出一獎得獎者
-                    </button>
-                </div>
-
-                <!-- Other prizes -->
-                <div class="prize-section" id="section30000">
-                    <h3>二獎
-                        <span>$30,000</span>
-                    </h3>
-                    <input type="number" id="winners30000" name="winners30000" placeholder="得獎者人數" min="1" required>
-                    <button onclick="selectWinner('30000', document.getElementById('winners30000').value)">
-                        ✨ 抽出二獎得獎者
-                    </button>
-                </div>
-
-                <div class="prize-section" id="section20000">
-                    <h3>三獎
-                        <span>$20,000</span>
-                    </h3>
-                    <input type="number" id="winners20000" name="winners20000" placeholder="得獎者人數" min="1" required>
-                    <button onclick="selectWinner('20000', document.getElementById('winners20000').value)">
-                        🌟 抽出三獎得獎者
-                    </button>
-                </div>
-
-                <!-- <div class="prize-section" id="section20000_extra">
-                    <h3>加碼獎
-                        <span>$20,000</span>
-                    </h3>
-                    <input type="number" id="winners20000_extra" name="winners20000_extra" placeholder="得獎者人數" min="1" required>
-                    <button onclick="selectWinner('20000_extra', document.getElementById('winners20000_extra').value)">
-                        💫 抽出加碼獎得獎者
-                    </button>
-                </div> -->
-
-                <div class="prize-section" id="section10000">
-                    <h3>加碼獎
-                        <span>$10,000</span>
-                    </h3>
-                    <input type="number" id="winners10000" name="winners10000" placeholder="得獎者人數" min="1" required>
-                    <button onclick="selectWinner('10000', document.getElementById('winners10000').value)">
-                        🎊 抽出加碼獎得獎者
-                    </button>
-                </div>
-
-                <div class="prize-section" id="section_custom">
-                    <h3>加碼獎
-                        <div class="custom-prize-input">
-                            <input type="number" 
-                                   id="custom_prize_amount" 
-                                   name="custom_prize_amount" 
-                                   placeholder="輸入獎金金額" 
-                                   min="1000" 
-                                   step="1000"
-                                   style="width: 120px; margin-right: 5px;">
-                            <span>元</span>
+                <div class="prize-layer">
+                    <div class="prize-section" id="section20000">
+                        <h3>三獎
+                            <span>$20,000</span>
+                        </h3>
+                        <input type="number" id="winners20000" name="winners20000" placeholder="得獎者人數" min="1" required>
+                        <button onclick="selectWinner('20000', document.getElementById('winners20000').value)">
+                            🌟 抽出三獎得獎者
+                        </button>
+                        <div class="prize-nav-buttons">
+                            <button class="prev-layer" disabled>Previous</button>
+                            <button class="next-layer">Next</button>
                         </div>
-                    </h3>
-                    <input type="number" 
-                           id="winners_custom" 
-                           name="winners_custom" 
-                           placeholder="得獎者人數" 
-                           min="1" 
-                           required>
-                    <button onclick="selectCustomWinner()">
-                        🎊 抽出得獎者
-                    </button>
+                    </div>
+                </div>
+
+                <div class="prize-layer" style="display: none;">
+                    <div class="prize-section" id="section30000">
+                        <h3>二獎
+                            <span>$30,000</span>
+                        </h3>
+                        <input type="number" id="winners30000" name="winners30000" placeholder="得獎者人數" min="1" required>
+                        <button onclick="selectWinner('30000', document.getElementById('winners30000').value)">
+                            ✨ 抽出二獎得獎者
+                        </button>
+                        <div class="prize-nav-buttons">
+                            <button class="prev-layer">Previous</button>
+                            <button class="next-layer">Next</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prize-layer" style="display: none;">
+                    <div class="prize-section" id="section50000">
+                        <h3>一獎
+                            <span>$50,000</span>
+                        </h3>
+                        <input type="number" id="winners50000" name="winners50000" placeholder="得獎者人數" min="1" required>
+                        <button onclick="selectWinner('50000', document.getElementById('winners50000').value)">
+                            🎯 抽出一獎得獎者
+                        </button>
+                        <div class="prize-nav-buttons">
+                            <button class="prev-layer">Previous</button>
+                            <button class="next-layer">Next</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prize-layer" style="display: none;">
+                    <div class="prize-section" id="section60000">
+                        <h3>特獎
+                            <span>$60,000</span>
+                        </h3>
+                        <input type="number" id="winners60000" name="winners60000" placeholder="得獎者人數" min="1" required>
+                        <button onclick="selectWinner('60000', document.getElementById('winners60000').value)">
+                            🎉 抽出特獎得獎者
+                        </button>
+                        <div class="prize-nav-buttons">
+                            <button class="prev-layer">Previous</button>
+                            <button class="next-layer">Next</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prize-layer" style="display: none;">
+                    <div class="prize-section" id="section10000">
+                        <h3>加碼獎
+                            <span>$10,000</span>
+                        </h3>
+                        <input type="number" id="winners10000" name="winners10000" placeholder="得獎者人數" min="1" required>
+                        <button onclick="selectWinner('10000', document.getElementById('winners10000').value)">
+                            🎊 抽出加碼獎得獎者
+                        </button>
+                        <div class="prize-nav-buttons">
+                            <button class="prev-layer">Previous</button>
+                            <button class="next-layer" disabled>Next</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prize-layer" style="display: none;">
+                    <div class="prize-section" id="section_custom">
+                        <h3>自訂加碼獎
+                            <div class="custom-prize-input">
+                                <input type="number" id="custom_prize_amount" name="custom_prize_amount" placeholder="輸入獎金金額" min="1000" step="1000" style="width: 120px; margin-right: 5px;">
+                                <span>元</span>
+                            </div>
+                        </h3>
+                        <input type="number" id="winners_custom" name="winners_custom" placeholder="得獎者人數" min="1" required>
+                        <button onclick="selectCustomWinner()" class="custom-winner-button">
+                            🎊 抽出得獎者
+                        </button>
+                        <div class="prize-nav-buttons">
+                            <button class="prev-layer">Previous</button>
+                            <button class="next-layer" disabled>Next</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+
     </div>
 
     <script>
@@ -330,7 +342,7 @@
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Error resetting candidates.');
+                alert('Error resetting candidates: ' + error.message);
             });
         }
 
@@ -340,14 +352,18 @@
             .then(data => {
                 if (data.success) {
                     alert(data.message || 'Winners reset successfully.');
-                    document.getElementById('winner').innerHTML = ''; // Clear winners
+                    // Clear winners display
+                    const modalWinner = document.getElementById('modalWinner');
+                    if (modalWinner) {
+                        modalWinner.innerHTML = ''; // Clear winners
+                    }
                 } else {
                     alert('Error resetting winners: ' + data.message);
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Error resetting winners.');
+                alert('Error resetting winners. ' + error.message);
             });
         }
 
@@ -446,6 +462,62 @@
                 }
             }
         });
+
+        const prizeLayers = document.querySelectorAll('.prize-layer');
+
+        prizeLayers.forEach((layer, index) => {
+            const nextButton = layer.querySelector('.next-layer');
+            if (nextButton) {
+                nextButton.addEventListener('click', () => {
+                    layer.style.display = 'none'; // Hide the current layer
+                    const nextLayer = prizeLayers[index + 1];
+                    if (nextLayer) {
+                        nextLayer.style.display = 'block'; // Show the next layer
+                    } else {
+                        prizeLayers[0].style.display = 'block'; // Show the first layer if no more layers
+                    }
+                });
+            }
+        });
+
+        // Add event listeners to the "Previous" and "Next" buttons
+        document.querySelectorAll('.prev-layer').forEach(btn => {
+            btn.addEventListener('click', showPreviousLayer);
+        });
+
+        document.querySelectorAll('.next-layer').forEach(btn => {
+            btn.addEventListener('click', showNextLayer);
+        });
+
+        // Function to show the previous prize layer
+        function showPreviousLayer() {
+            const currentLayer = this.parentNode.parentNode.parentNode;
+            const prevLayer = currentLayer.previousElementSibling;
+
+            if (prevLayer) {
+                currentLayer.style.display = 'none';
+                prevLayer.style.display = 'block';
+
+                // Enable/disable "Previous" and "Next" buttons
+                prevLayer.querySelector('.prev-layer').disabled = !prevLayer.previousElementSibling;
+                prevLayer.querySelector('.next-layer').disabled = false;
+            }
+        }
+
+        // Function to show the next prize layer
+        function showNextLayer() {
+            const currentLayer = this.parentNode.parentNode.parentNode;
+            const nextLayer = currentLayer.nextElementSibling;
+
+            if (nextLayer) {
+                currentLayer.style.display = 'none';
+                nextLayer.style.display = 'block';
+
+                // Enable/disable "Previous" and "Next" buttons
+                nextLayer.querySelector('.prev-layer').disabled = false;
+                nextLayer.querySelector('.next-layer').disabled = !nextLayer.nextElementSibling;
+            }
+        }
     </script>
 
     <!-- Add this before </body> -->
