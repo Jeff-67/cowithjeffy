@@ -1,41 +1,85 @@
 body {
     font-family: 'Arial', sans-serif;
-    background-image: url('./images/jko_pig_background.jpg'); /* Retaining the original banner */
-    background-repeat: no-repeat;
-    background-position: top center;
-    background-color: white;
+    background: #1a1a1a;
     color: #E3001C;
     margin: 0;
     padding: 0;
     min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.stage-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url('./images/jko_stage_background.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.stage-background::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    z-index: -1;
 }
 
 .content-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 40px;
+}
+
+.name-card-container {
+    position: relative !important;
+    bottom: auto;
+    left: auto;
+    transform: none;
     width: 100%;
-    margin-top: 100px;
-    padding: 20px;
-    box-sizing: border-box;
+    max-width: 1200px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin: 40px 0;
+    z-index: 2;
+}
+
+.name-card {
+    width: 70px;
+    height: 70px;
+    padding: 8px;
+    text-align: center;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid rgba(227, 0, 28, 0.4);
+    transition: all 0.3s ease;
     position: relative;
-    z-index: 1;
 }
-
-/* .left-section {
-    width: 300px;
-    padding-right: 20px;
-    flex-shrink: 0;
-    margin-left: 0px;
-}
-
-.right-section {
-    flex: 1;
-    margin-left: 50px;
-    padding-left: 20px;
-    min-height: 400px;
-    overflow-y: auto;
-} */
 
 h1 {
     font-size: 2.5em;
@@ -143,6 +187,7 @@ button:hover {
     color: #E3001C;
     font-size: 1.2em;
     word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 #winner {
@@ -191,23 +236,20 @@ button:hover {
 }
 
 .prize-sections {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 10px;
     width: 100%;
-    max-width: 800px; /* Adjust the maximum width as needed */
-    margin-left: 0px;
+    max-width: 500px;
+    margin-top: 40px;
+    position: relative;
 }
 
 .prize-section {
     background: white;
     border: 2px solid #FF0033;
     border-radius: 15px;
-    padding: 12px !important;
+    padding: 20px !important;
     box-shadow: 0 4px 15px rgba(227, 0, 28, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
     text-align: center;
-    margin-bottom: 10px !important;
+    margin: 0 !important;
 }
 
 .prize-section:hover {
@@ -216,15 +258,15 @@ button:hover {
 }
 
 .prize-section h3 {
-    font-size: 1.5em; /* Increase the font size */
-    padding: 10px; /* Add some padding */
+    font-size: 1.5em;
+    padding: 10px;
     margin-bottom: 8px !important;
     color: #333;
 }
 
 .prize-section h3 span {
     display: block;
-    font-size: 1.8em; /* Increase the font size of the prize amount */
+    font-size: 1.8em;
     margin-top: 5px;
     background: linear-gradient(45deg, #FF0033, #E3001C);
     -webkit-background-clip: text;
@@ -235,11 +277,11 @@ button:hover {
 
 .prize-section input {
     width: 90% !important;
-    padding: 10px; /* Add some padding */
+    padding: 10px;
     border: 2px solid #ddd;
     border-radius: 8px;
     margin: 5px auto !important;
-    font-size: 1.1em; /* Increase the font size of input and button */
+    font-size: 1.1em;
     transition: border-color 0.3s ease;
 }
 
@@ -250,7 +292,7 @@ button:hover {
 
 .prize-section button {
     width: 90% !important;
-    padding: 10px; /* Add some padding */
+    padding: 10px;
     background: linear-gradient(45deg, #FF0033, #E3001C);
     color: white;
     border: none;
@@ -383,21 +425,18 @@ button:hover {
     }
 }
 
-/* Optional: Add hover effect for better interactivity */
 .winner-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(227, 0, 28, 0.15);
     transition: all 0.3s ease;
 }
 
-/* Add these new styles */
 .floating-mascot {
     position: fixed;
     top: 20px;
     left: 20px;
     z-index: 1000;
-    /* Increased width from 100px to 200px */
-    width: 200px;  /* You can adjust this value to make it even bigger */
+    width: 200px;
 }
 
 .mascot-image {
@@ -411,20 +450,19 @@ button:hover {
         transform: translateY(0) rotate(0deg);
     }
     25% {
-        transform: translateY(-25px) rotate(5deg); /* Increased movement range */
+        transform: translateY(-25px) rotate(5deg);
     }
     50% {
         transform: translateY(0) rotate(0deg);
     }
     75% {
-        transform: translateY(25px) rotate(-5deg); /* Increased movement range */
+        transform: translateY(25px) rotate(-5deg);
     }
     100% {
         transform: translateY(0) rotate(0deg);
     }
 }
 
-/* Optional: Add hover effect */
 .floating-mascot:hover .mascot-image {
     animation: bounce 0.5s ease infinite;
 }
@@ -438,14 +476,12 @@ button:hover {
     }
 }
 
-/* Add these new styles for the top-right image */
 .floating-mascot-right {
     position: fixed;
     top: 20px;
     right: 20px;
     z-index: 1000;
-    /* Adjust width as needed */
-    width: 200px;  /* You can adjust this value to make it bigger or smaller */
+    width: 200px;
 }
 
 .mascot-image-right {
@@ -459,32 +495,29 @@ button:hover {
         transform: translateY(0) rotate(0deg);
     }
     25% {
-        transform: translateY(-25px) rotate(-5deg); /* Adjusted for opposite rotation */
+        transform: translateY(-25px) rotate(-5deg);
     }
     50% {
         transform: translateY(0) rotate(0deg);
     }
     75% {
-        transform: translateY(25px) rotate(5deg); /* Adjusted for opposite rotation */
+        transform: translateY(25px) rotate(5deg);
     }
     100% {
         transform: translateY(0) rotate(0deg);
     }
 }
 
-/* Optional: Add hover effect */
 .floating-mascot-right:hover .mascot-image-right {
     animation: bounce 0.5s ease infinite;
 }
 
-/* Responsive design */
 @media (max-width: 768px) {
     .prize-sections {
         max-width: 100% !important;
     }
 }
 
-/* Add these new styles for the employee pools */
 .employee-pool {
     background: rgba(255, 255, 255, 0.95);
     border-radius: 15px;
@@ -524,7 +557,6 @@ button:hover {
     transition: all 0.3s ease;
 }
 
-/* Update name card styles for experience levels */
 .name-card {
     width: 80px;
     height: 80px;
@@ -567,7 +599,7 @@ button:hover {
     max-width: 1200px;
     display: flex;
     gap: 20px;
-    margin-bottom: 20px;
+    margin: 20px 0;
 }
 
 .employee-pool {
@@ -575,7 +607,7 @@ button:hover {
     background: rgba(255, 255, 255, 0.95);
     border-radius: 15px;
     padding: 25px;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
@@ -587,7 +619,6 @@ button:hover {
     border: 2px solid #FF9900;
 }
 
-/* Add responsive design for mobile */
 @media (max-width: 768px) {
     .pools-container {
         flex-direction: column;
@@ -648,7 +679,6 @@ button:hover {
     transition: background-color 0.3s ease;
 }
 
-/* Style for when showing winners */
 .modal-content.show-winners {
     background-color: #fefefe;
     border: 1px solid #888;
@@ -682,49 +712,33 @@ button:hover {
 }
 
 .prize-layer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: none; /* Initially hide all layers */
-    z-index: 1; /* Adjust z-index as needed */
+    position: relative;
+    z-index: 1;
+    opacity: 1;
+    transform: none;
 }
 
-/* Show the first layer by default */
 .prize-layer:first-child {
     display: block;
 }
 
-/* Add these styles to the existing file */
-
-/* Adjust the positioning and sizing of the prize layers */
-.prize-layer {
-    position: relative;
-    z-index: 1;
-    opacity: 1;
-    transform: translateY(50px); /* Adjust the value to move the layers down */
-}
-
 .prize-layer.active {
-    /* Styles for the active layer */
     z-index: 2;
     opacity: 1;
-    transform: translateY(0); /* Reset the translation for the active layer */
+    transform: translateY(0);
 }
 
-/* Adjust the width of the prize sections */
 .prize-sections {
     width: 100%;
-    max-width: 800px; /* Adjust the maximum width as needed */
+    max-width: 800px;
+    margin-top: 40px;
+    position: relative;
 }
 
-/* Adjust the spacing between prize sections */
 .prize-section {
-    margin-bottom: 20px; /* Increase or decrease the value as needed */
+    margin-bottom: 20px;
 }
 
-/* Adjust the font size and spacing for better readability on smaller screens */
 @media (max-width: 768px) {
     .prize-section h3 {
         font-size: 1.2em;
@@ -741,14 +755,12 @@ button:hover {
     }
 }
 
-/* Adjust the size and positioning of the floating mascots */
 .floating-mascot,
 .floating-mascot-right {
-    width: 150px; /* Adjust the width as needed */
-    top: 80px; /* Adjust the top position as needed */
+    width: 150px;
+    top: 80px;
 }
 
-/* Adjust the animation for the floating mascots on smaller screens */
 @media (max-width: 768px) {
     @keyframes floatAndSpin {
         0% {
@@ -799,9 +811,110 @@ button:hover {
     font-size: 0.9em !important;
 }
 
-/* Add these styles to your styles.css file */
 .custom-winner-button {
-    font-size: 1.2em; /* Increase font size */
-    padding: 12px 24px; /* Increase padding */
-    border-radius: 8px; /* Adjust border radius */
+    font-size: 1.2em;
+    padding: 12px 24px;
+    border-radius: 8px;
+}
+
+@media (min-width: 1200px) {
+    .name-card-container {
+        max-width: 1200px;
+        gap: 25px 35px;
+    }
+}
+
+@media (max-width: 768px) {
+    .name-card-container {
+        gap: 15px 20px;
+        bottom: 30%;
+    }
+    
+    .name-card {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+.center-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 40px 0;
+    padding: 20px 0;
+}
+
+.prize-sections {
+    width: 100%;
+    max-width: 800px;
+    margin-top: 40px;
+    position: relative;
+}
+
+.pools-container {
+    width: 90%;
+    max-width: 1200px;
+    display: flex;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.employee-pool {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 40px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.control-buttons {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    display: flex;
+    gap: 15px;
+    z-index: 10;
+}
+
+.control-button {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    border-radius: 25px !important;
+    padding: 10px 20px !important;
+    font-size: 14px !important;
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    min-width: auto !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.control-button.reset-candidates {
+    border: 2px solid #E3001C !important;
+    color: #E3001C !important;
+}
+
+.control-button.reset-winners {
+    border: 2px solid #4169E1 !important;
+    color: #4169E1 !important;
+}
+
+.control-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    background-color: white !important;
+}
+
+.control-button img {
+    width: 18px;
+    height: 18px;
+    opacity: 0.8;
+}
+
+.prize-layer {
+    position: relative !important;
+    top: auto;
+    left: auto;
+    transform: none !important;
 }
