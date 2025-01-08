@@ -72,7 +72,7 @@
         </div>
 
         <!-- Candidate Pool -->
-        <div style="width: 100%; text-align: center; margin-bottom: 20px;">
+        <div style="width: 100%; text-align: center; margin-bottom: 100px;">
             <h2></h2>
             <div id="employeeList" class="name-card-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 5px;">
                 {% for employee in employees %}
@@ -86,12 +86,13 @@
             </div>
         </div>
 
-
-            <!-- Left Section (Selection Buttons) -->
-            <div class="prize-sections">
+        <!-- Prize Sections Container -->
+        <div style="display: flex; gap: 100px; justify-content: center; align-items: flex-end; margin-top: 50px; margin-bottom: 100px;">
+            <!-- Regular Prize Sections -->
+            <div class="prize-sections" style="width: 400px;">
                 <!-- Special Prize -->
-                <div class="prize-layer">
-                    <div class="prize-section" id="section20000">
+                <div class="prize-layer" style="width: 400px;">
+                    <div class="prize-section" id="section20000" style="width: 400px; height: 280px; border: 2px solid gold; box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); padding: 20px;">
                         <h3>三獎
                             <span>$20,000</span>
                         </h3>
@@ -100,14 +101,14 @@
                             🌟 抽出三獎得獎者
                         </button>
                         <div class="prize-nav-buttons">
-                            <button class="prev-layer" disabled>Previous</button>
-                            <button class="next-layer">Next</button>
+                            <button class="prev-layer" disabled style="width: 150px !important; min-width: 150px !important;">Previous</button>
+                            <button class="next-layer" style="width: 150px !important; min-width: 150px !important;">Next</button>
                         </div>
                     </div>
                 </div>
 
-                <div class="prize-layer" style="display: none;">
-                    <div class="prize-section" id="section30000">
+                <div class="prize-layer" style="display: none; width: 400px;">
+                    <div class="prize-section" id="section30000" style="width: 400px; height: 280px; border: 2px solid gold; box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); padding: 20px;">
                         <h3>二獎
                             <span>$30,000</span>
                         </h3>
@@ -116,14 +117,14 @@
                             ✨ 抽出二獎得獎者
                         </button>
                         <div class="prize-nav-buttons">
-                            <button class="prev-layer">Previous</button>
-                            <button class="next-layer">Next</button>
+                            <button class="prev-layer" style="width: 150px !important; min-width: 150px !important;">Previous</button>
+                            <button class="next-layer" style="width: 150px !important; min-width: 150px !important;">Next</button>
                         </div>
                     </div>
                 </div>
 
-                <div class="prize-layer" style="display: none;">
-                    <div class="prize-section" id="section50000">
+                <div class="prize-layer" style="display: none; width: 400px;">
+                    <div class="prize-section" id="section50000" style="width: 400px; height: 280px; border: 2px solid gold; box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); padding: 20px;">
                         <h3>一獎
                             <span>$50,000</span>
                         </h3>
@@ -132,14 +133,14 @@
                             🎯 抽出一獎得獎者
                         </button>
                         <div class="prize-nav-buttons">
-                            <button class="prev-layer">Previous</button>
-                            <button class="next-layer">Next</button>
+                            <button class="prev-layer" style="width: 150px !important; min-width: 150px !important;">Previous</button>
+                            <button class="next-layer" style="width: 150px !important; min-width: 150px !important;">Next</button>
                         </div>
                     </div>
                 </div>
 
-                <div class="prize-layer" style="display: none;">
-                    <div class="prize-section" id="section60000">
+                <div class="prize-layer" style="display: none; width: 400px;">
+                    <div class="prize-section" id="section60000" style="width: 400px; height: 280px; border: 2px solid gold; box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); padding: 20px;">
                         <h3>特獎
                             <span>$60,000</span>
                         </h3>
@@ -148,48 +149,27 @@
                             🎉 抽出特獎得獎者
                         </button>
                         <div class="prize-nav-buttons">
-                            <button class="prev-layer">Previous</button>
-                            <button class="next-layer">Next</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="prize-layer" style="display: none;">
-                    <div class="prize-section" id="section10000">
-                        <h3>加碼獎
-                            <span>$10,000</span>
-                        </h3>
-                        <input type="number" id="winners10000" name="winners10000" placeholder="得獎者人數" min="1" required>
-                        <button onclick="selectWinner('10000', document.getElementById('winners10000').value)">
-                            🎊 抽出加碼獎得獎者
-                        </button>
-                        <div class="prize-nav-buttons">
-                            <button class="prev-layer">Previous</button>
-                            <button class="next-layer" disabled>Next</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="prize-layer" style="display: none;">
-                    <div class="prize-section" id="section_custom">
-                        <h3>自訂加碼獎
-                            <div class="custom-prize-input">
-                                <input type="number" id="custom_prize_amount" name="custom_prize_amount" placeholder="輸入獎金金額" min="1000" step="1000" style="width: 120px; margin-right: 5px;">
-                                <span>元</span>
-                            </div>
-                        </h3>
-                        <input type="number" id="winners_custom" name="winners_custom" placeholder="得獎者人數" min="1" required>
-                        <button onclick="selectCustomWinner()" class="custom-winner-button">
-                            🎊 抽出得獎者
-                        </button>
-                        <div class="prize-nav-buttons">
-                            <button class="prev-layer">Previous</button>
-                            <button class="next-layer" disabled>Next</button>
+                            <button class="prev-layer" style="width: 150px !important; min-width: 150px !important;">Previous</button>
+                            <button class="next-layer" style="width: 150px !important; min-width: 150px !important;">Next</button>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Custom Prize Section -->
+            <div class="prize-section" id="section_custom" style="width: 400px; height: 280px; border: 2px solid gold; box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); padding: 20px;">
+                <h3>自訂加碼獎
+                    <div class="custom-prize-input">
+                        <input type="number" id="custom_prize_amount" name="custom_prize_amount" placeholder="輸入獎金金額" min="1000" step="1000" style="width: 120px; margin-right: 5px;">
+                        <span>元</span>
+                    </div>
+                </h3>
+                <input type="number" id="winners_custom" name="winners_custom" placeholder="得獎者人數" min="1" required>
+                <button onclick="selectCustomWinner()" class="custom-winner-button">
+                    🎊 抽出得獎者
+                </button>
+            </div>
+        </div>
     </div>
 
     <script>
